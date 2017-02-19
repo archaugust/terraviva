@@ -1,3 +1,9 @@
+/bin/
+/tests/
+.idea/
+.settings/
+/nbproject/
+/var/
 /app/config/parameters.yml
 /app/config/parameters.yml.dist
 /build/
@@ -14,6 +20,7 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
+/web/assets/
 /web/bundles/
 /web/images/
 /web/bundles/
