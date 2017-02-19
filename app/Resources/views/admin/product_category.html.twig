@@ -1,0 +1,58 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+	{% if parent == 'add' %}
+		{% set parent = 0 %}
+	{% endif %}
+    <form method="post" name="delete">
+    <div class="row">
+        <div class="col-md-4 mb-15">
+            <a href="{{ path('admin_product_category_add', {'id':parent}) }}" class="btn btn-primary">Add Category</a> <input type="submit" name="submit" class="btn btn-primary" value="Delete Checked">
+        </div>
+        <div class="col-md-8 text-right">
+            {{ paginator|raw }}
+        </div>
+    </div>
+    <table class="table table-bordered table-hover table-responsive">
+        <thead>
+        <tr>
+            <th width="30"><input type="checkbox" id="checkAll"></th>
+            <th width="25%">Name</th>
+            <th>Description</th>
+            <th width="25%">Tag Groups</th>
+            <th width="100">Image</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% if item.image == ''%}
+                {% set image = 'images/no-image.jpg' %}
+            {% else %}
+                {% set image = 'images/categories/thumb/'~item.image %}
+            {% endif %}
+            <tr>
+                <td><input type="checkbox" name="delete[]" value="{{ item.id }}"></td>
+                <td>
+                    {% if item.level > 0 %}
+                        {% for i in 1..item.level %}--{% endfor %}
+                    {% endif %}
+                    <a href="{{ path('admin_product_category_edit', {'id':item.id}) }}">{{ item.title }}</a><br />
+                    <a href="{{ path('admin_product_item', {'cat_id':item.id}) }}" class="btn btn-default btn-xs">Manage Items</a>
+                </td>
+                <td>{{ item.description|length > 300 ? item.description|slice(0, 300) ~ '...' : item.description  }}</td>
+                <td>{{ item.filters }}</td>
+                <td><img src="{{ asset(image) }}" alt="{{ item.title }}" class="img-responsive" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+</script>
+{% endblock %}
+

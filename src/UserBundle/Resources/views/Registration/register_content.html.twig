@@ -1,0 +1,41 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="animated fadeInDownSmall row">
+    <div class="col-md-6">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        You are already registered.
+    {% else %}
+        <h1 class="mt-0">Register for an Account</h1>
+        {{ form_start(form, {'attr': {'class': 'fos_user_registration_register','id':'registration_form'}}) }}
+        {% if not form.vars.valid %}
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Please review the fields marked with errors below.
+            </div>
+        {% endif %}
+        <fieldset class="form-group">
+            {{ form_label(form.username) }}
+            {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.username) }}
+            <div class="mt-10">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.email) }}
+            </div>
+            <div class="mt-10">
+                {{ form_label(form.plainPassword.first) }}
+                {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.plainPassword.first) }}
+            </div>
+            <div class="mt-10">
+                {{ form_label(form.plainPassword.second) }}
+                {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </fieldset>
+        <div>
+            <div class="g-recaptcha" data-sitekey="6LcrFQ0UAAAAAF_jSy3fBeIZG9OS9g8M68u_lncq"></div>
+            <input type="submit" class="btn btn-primary mt-15" value="Register" />
+        </div>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+        {{ form_end(form) }}
+    {% endif %}
+    </div>
+</div>

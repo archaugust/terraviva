@@ -1,0 +1,281 @@
+{% extends 'base_shop.html.twig' %}
+    {% set filter = app.request.get('filter') %}
+{% block title %}{{ category.title }}{% endblock %}
+{% block description %}{{ category.description }}{% endblock %}
+{% block breadcrumbs %}{% for breadcrumb in breadcrumbs %} <i class="fa fa-angle-left fa-fw"></i> <a href="/shop/category/{{ breadcrumb.alias }}">{{ breadcrumb.title }}</a>{% endfor %}<span id="breadcrumb_item"></span>{% endblock %}
+{% block sidebar %}
+    <div class="clearfix"></div>
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            {% if category.filters|length > 0 %}
+            <div>
+                <div class="parent">
+                    <a role="button" data-toggle="collapse" href="#collapseTags" aria-expanded="false" aria-controls="collapseTags">
+                        <span class="hidden-xs">Narrow Your Search</span>
+                        <span class="visible-xs" id="xs-check">Narrow Your Search</span>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+                <div class="collapse in" id="collapseTags">
+                {% for tagGroup in category.filters %}
+                    {% set tags = tagGroup.tags|split(',') %}
+                    <div class="tag-group">
+                        <div class="tag-title"><b>{{ tagGroup.title|upper }} </b><span class="opa-5"> Select {{ tagGroup.title|lower }}</span></div>
+                        {% for tag in tags %}
+                            <div class="tag-item">
+                                <input type="checkbox" value="{{ tag }}" name="tag[]" id="{{ tag }}" {% if tag == filter %}checked{% endif %} />
+                                <label for="{{ tag }}"><div>{{ tag }}</div></label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <ul class="metismenu cat-menu hidden-xs" id="cat-menu">
+                <li class="parent">{{ category.parent.title }}</li>
+                {% for item in category.parent.children %}
+                	{% set close_tag = false %}
+                    <li>
+                        <a href="/shop/category/{{ item.alias }}" aria-expanded="false">{{ item.title }}
+                            {% if item.filters|length > 0 %}
+                            	{% set close_tag = true %}
+    	                        <span class="glyphicon arrow"></span></a>
+                                <ul aria-expanded="false" class="collapse">
+                                	<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}">All {{ item.title }} A-Z</a></li>
+        	                        {% for filter in item.filters %}
+        	                            {% set tags = filter.tags|split(',') %}
+										{% for tag in tags %}        	                        
+        	                        		<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}?filter={{ tag }}">{{ tag }}</a></li>
+        	                        	{% endfor %}	
+        	                        {% endfor %}
+    	                        </ul>
+	                        {% endif %}
+                            {% if item.children|length > 0 %}
+                            	{% set hassub = 0 %}
+	                            {% for child in item.children %}
+	                            	{% if child.publish == 1 %}
+	                            		{% set hassub = 1 %}
+	                            	{% endif %}
+                            	{% endfor %}
+                            	{% if hassub == 1 %}
+    	                            <span class="glyphicon arrow"></span></a>
+                                	{% set close_tag = true %}
+        	                        {% if item.filters|length == 0 %}<span class="glyphicon arrow"></span></a>{% endif %}
+                                    <ul aria-expanded="false" class="collapse">
+                        	        {% for subcategory in item.children %}
+                        	        	{% if subcategory.publish == 1 %}
+                                        <li class="li-sub"><a href="{{ path('shop_category', {'alias':subcategory.alias}) }}">{{ subcategory.title }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+	                        {% endif %}
+                        {% if close_tag == false %}
+                        </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="metismenu cat-menu visible-xs" id="cat-menu-xs">
+                <li class="parent"><a href="/" aria-expanded="true">{{ category.parent.title }}<span class="glyphicon glyphicon-plus"></span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        {% for item in category.parent.children %}
+                        	{% set close_tag = false %}
+                            <li>
+                                <a href="/shop/category/{{ item.alias }}" aria-expanded="false">{{ item.title }}
+                                    {% if item.children|length > 0 %}<span class="glyphicon arrow"></span></a>
+                                    	{% set close_tag = true %}
+                                        <ul aria-expanded="false" class="collapse">
+                            	        {% for subcategory in item.children %}
+                                            <li class="li-sub"><a href="{{ path('shop_category', {'alias':subcategory.alias}) }}">{{ subcategory.title }}</a></li>
+                                        {% endfor %}
+                                        </ul>
+        	                        {% endif %}
+                                    {% if item.filters|length > 0 %}
+                                    	{% set close_tag = true %}
+            	                        {% if item.children|length == 0 %}<span class="glyphicon arrow"></span></a>{% endif %}
+                                        <ul aria-expanded="false" class="collapse">
+                	                        {% for filter in item.filters %}
+                	                            {% set tags = filter.tags|split(',') %}
+        										{% for tag in tags %}        	                        
+                	                        		<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}?filter={{ tag }}">{{ tag }}</a></li>
+                	                        	{% endfor %}	
+                	                        {% endfor %}
+            	                        </ul>
+        	                        {% endif %}
+                                {% if close_tag == false %}
+                                </a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+        </nav>
+    </aside>
+{% endblock %}
+
+{% block body %}
+    <div id="categoryDiv">
+        <h1 class="mt-10 mb-15">{{ category.title }}</h1>
+        <div class="filters" id="filtersDiv">
+            <span class="title">Displaying:</span> <span id="tagsDiv"><a class="btn" id="all">All <i class="fa fa-times-circle"></i> </a></span>
+            <div class="btn-group">
+                <input type="button" class="btn btn-gray btn-sort" value="Sort By" id="sort_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-caret-down fa-fw"></i>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu sort">
+                    <li><a onclick="setSort('Name A-Z')">Name A-Z</a></li>
+                    <li><a onclick="setSort('Price High to Low')">Price High to Low</a></li>
+                    <li><a onclick="setSort('Price Low to High')">Price Low to High</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        <div id="contentDiv">
+            {% for item in items %}
+            	{% if item.images[0].filename == '' %}
+            		{% set image = 'no-image.png' %}
+            	{% else %}
+            		{% set image = item.images[0].filename %}
+            	{% endif %}
+	            <div class="mt-25 pad-item">
+	            	<div class="row">
+	            		<div class="col-md-4">
+                            <a href="javascript:void(0)" onclick="setItem('{{ item.alias }}')">
+                                <figure class="zoom">
+                                    <img src="{{ asset('images/listings/s/'~ image) }}" alt="{{ item.title }}" />
+                                </figure>
+                            </a>
+	            		</div>
+	            		<div class="col-md-8">
+                            <h3><a href="javascript:void(0)" onclick="setItem('{{ item.alias }}')">{{ item.title }}</a></h3>
+                            <hr />
+                            <div class="lato-light">
+                            	{{ item.description|raw }}
+                            </div>
+                            <hr />
+                            <div class="item-bottom row">
+                            	<div class="col-md-2 lato black price">
+                                	${{ item.priceSale|number_format(2) }}
+                                </div>
+                                <div class="col-md-6 lato bold availability">
+                                	Availability: 
+                                	<span class="red black">
+                                	{% if item.inStock > 0 %}
+                                		IN STOCK
+                            		{% else %}
+                            			OUT OF STOCK <a href="#" class="btn btn-xs btn-primary">Enquire/Order</a>
+                        			{% endif %}</span>
+                            	</div>
+                            	<div class="col-md-4" align="right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Add to <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            {% if item.inStock > 0 %}<li><a href="{{ path('cart_add') }}?item={{ item.alias }}">Shopping Cart</a></li>{% endif %}
+                                            <li><a href="#">Wishlist</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+	            		</div>
+	            	</div>
+                </div>
+            {% endfor %}
+
+            <div class="mt-25" align="center">
+                <ul class="pagination">
+                    {% if paginator.prevUrl %}
+                        <li><a href="javascript:void(0)" onclick="setPage({{ paginator.prevUrl }})"><i class="fa fa-angle-left"></i></a></li>
+                    {% endif %}
+    
+                    {% for page in paginator.pages %}
+                        {% if page.url %}
+                            <li {% if page.isCurrent %}class="active"{% endif %}>
+                                <a href="javascript:void(0)" onclick="setPage({{ page.url }})">{{ page.num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled"><span>{{ page.num }}</span></li>
+                        {% endif %}
+                    {% endfor %}
+    
+                    {% if paginator.nextUrl %}
+                        <li><a href="javascript:void(0)" onclick="setPage({{ paginator.nextUrl }})"><i class="fa fa-angle-right"></i></a></li>
+                    {% endif %}
+                </ul>
+                <br />
+                {% if paginator.totalItems > 0 %}Page {{ paginator.currentPage }} of {{ paginator.numPages }} | Showing {{ paginator.currentPageFirstItem }} - {{ paginator.CurrentPageLastItem }} of {{ paginator.totalItems }} Items{% endif %}
+            </div>
+        </div>
+        <input type="hidden" name="category" value="{{ category.id }}">
+        <input type="hidden" name="page" id="pagenum" value="1">
+        <input type="hidden" name="sort" id="sort" value="Name A-Z">
+    </div>
+
+    <div id="itemDiv"></div>
+{% endblock %}
+
+{% block bottom %}
+{{ include('shop/shop_related_items.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/category-list.js') }}"></script>
+    {% if filter is not empty %}
+    <script>
+    function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    
+    $(function (){
+        var filter = getParameterByName('filter');
+        $('#tagsDiv a').remove(":contains('All')");
+        var tag = $('<a class="btn">'+ filter +' <i class="fa fa-times-circle"></i> </a>').hide();
+        $('#tagsDiv').append(tag);
+        tag.show('normal')
+        $('#tags').val($('#tags').val()+1)
+
+        $('#tagsDiv a').click(function () {
+            var id = $(this).text();
+            $('#'+ id).prop('checked',false);
+    
+            $('#tagsDiv a').fadeOut().remove(":contains('"+ id +"')").fadeIn();
+            $('#tags').val($('#tags').val()-1)
+            if ($('#tagsDiv').html() == '') {
+                tag = $('<a class="btn">All <i class="fa fa-times-circle"></i> </a>').hide();
+                $('#tagsDiv').append(tag);
+                tag.show('normal');
+            }
+            $('#pagenum').val(1);
+            $('#form').trigger('submit');
+        });
+
+        $('#form').trigger('submit');
+    });
+    </script>
+    {% endif %}
+    
+    {% if category.filters|length == 0 %}
+    <script>
+        $(function () {
+            $('#cat-menu').metisMenu();
+            $('#cat-menu-xs').metisMenu();
+    	});
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,5 @@
+<ul class="list-unstyled">
+{% for menu in submenu %}
+    <li><a href="/{{ menu.url }}">{{ menu.title }}</a></li>
+{% endfor %}
+</ul>

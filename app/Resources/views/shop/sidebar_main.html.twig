@@ -1,0 +1,84 @@
+    <div class="clearfix"></div>
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="metismenu cat-menu hidden-xs" id="cat-menu">
+                <li class="parent">{{ parent }}</li>
+                {% for item in items %}
+                	{% set close_tag = false %}
+                    <li>
+                        <a href="/shop/category/{{ item.alias }}" aria-expanded="false">{{ item.title }}
+                            {% if item.filters|length > 0 %}
+                            	{% set close_tag = true %}
+    	                        <span class="glyphicon arrow"></span></a>
+                                <ul aria-expanded="false" class="collapse">
+                                	<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}">All {{ item.title }} A-Z</a></li>
+        	                        {% for filter in item.filters %}
+        	                            {% set tags = filter.tags|split(',') %}
+										{% for tag in tags %}        	                        
+        	                        		<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}?filter={{ tag }}">{{ tag }}</a></li>
+        	                        	{% endfor %}	
+        	                        {% endfor %}
+    	                        </ul>
+	                        {% endif %}
+                            {% if item.children|length > 0 %}
+                            	{% set hassub = 0 %}
+	                            {% for child in item.children %}
+	                            	{% if child.publish == 1 %}
+	                            		{% set hassub = 1 %}
+	                            	{% endif %}
+                            	{% endfor %}
+                            	{% if hassub == 1 %}
+    	                            <span class="glyphicon arrow"></span></a>
+                                	{% set close_tag = true %}
+                                    <ul aria-expanded="false" class="collapse">
+                        	        {% for subcategory in item.children %}
+                        	        	{% if subcategory.publish == 1 %}
+                                        <li class="li-sub"><a href="{{ path('shop_category', {'alias':subcategory.alias}) }}">{{ subcategory.title }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+	                        {% endif %}
+                        {% if close_tag == false %}
+                        </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="metismenu cat-menu visible-xs" id="cat-menu-xs">
+                <li class="parent"><a href="/" aria-expanded="true">{{ parent }}<span class="glyphicon glyphicon-plus"></span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        {% for item in items %}
+                        	{% set close_tag = false %}
+                            <li>
+                                <a href="/shop/category/{{ item.alias }}" aria-expanded="false">{{ item.title }}
+    	                        <span class="glyphicon arrow"></span></a>
+                                    {% if item.children|length > 0 %}
+                                    	{% set close_tag = true %}
+                                        <ul aria-expanded="false" class="collapse">
+                            	        {% for subcategory in item.children %}
+                                            <li class="li-sub"><a href="{{ path('shop_category', {'alias':subcategory.alias}) }}">{{ subcategory.title }}</a></li>
+                                        {% endfor %}
+                                        </ul>
+        	                        {% endif %}
+                                    {% if item.filters|length > 0 %}
+                                    	{% set close_tag = true %}
+                                        <ul aria-expanded="false" class="collapse">
+                	                        {% for filter in item.filters %}
+                	                            {% set tags = filter.tags|split(',') %}
+        										{% for tag in tags %}        	                        
+                	                        		<li class="li-sub"><a href="{{ path('shop_category', {'alias':item.alias}) }}?filter={{ tag }}">{{ tag }}</a></li>
+                	                        	{% endfor %}	
+                	                        {% endfor %}
+            	                        </ul>
+        	                        {% endif %}
+                                {% if close_tag == false %}
+                                </a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>

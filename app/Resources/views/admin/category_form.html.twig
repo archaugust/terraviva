@@ -1,0 +1,33 @@
+{% form_theme form 'form_errors.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div><a href="{{ path('admin_properties_category') }}" class="btn btn-primary">View All</a> <a href="{{ path('admin_properties_category_add') }}" class="btn btn-primary">Add New Category</a> </div>
+    <br />
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+<div class="animated fadeInDown">
+    <fieldset class="form-group">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.title) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.sort_order) }}
+        {{ form_widget(form.sort_order, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.sort_order) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.saveAndAdd) }}
+    </fieldset>
+</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% set logged = 1 %}
+{% else %}
+    {% set logged = 0 %}
+{% endif %}
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container-fluid top-header">
+        <div class="container text-right">
+            <ul class="list-inline hidden-xs">
+                <li class="first light">CALL US: 03 358 5565 (EXT 2)</li>
+                <li class="normal">Open 7am - 5pm 7 Days</li>
+                <li class="dark"><a href="/cart" data-toggle="tooltip" data-placement="bottom" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="badge">{{ app.session.get('cart')|length }}</span></a></li>
+                {% if logged %}
+                    <li><a href="/member" data-toggle="tooltip" data-placement="bottom" title="Member Account"><i class="fa fa-user"></i></a></li>
+                    <li><a href="/logout" data-toggle="tooltip" data-placement="bottom" title="Logout" class="last"><i class="fa fa-power-off"></i></a></li>
+                {% else %}
+                    <li><a href="#" data-toggle="modal" data-target="#loginModal"><i data-toggle="tooltip" data-placement="bottom" title="Login" class="fa fa-sign-in"></i></a></li>
+                    <li><a href="/register" data-toggle="tooltip" data-placement="bottom" title="Sign Up" class="last"><i class="fa fa-user-plus"></i></a></li>
+                {% endif %}
+                <li><a href="http://cafe.terraviva.nz" target="_blank">Cafe</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse-main">
+                <span class="sr-only">Toggle navigation</span>MENU <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="/"><img src="{{ asset('images/terra-viva-logo.png') }}"></a>
+        </div>
+        <div class="collapse navbar-collapse main-menu" id="collapse-main">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#menuGarden" data-toggle="modal">The Garden</a>
+                </li>
+                <li>
+                    <a href="#menuHomeGift" data-toggle="modal">Home and Gift</a>
+                </li>
+                <li>
+                    <a href="/design">Design</a>
+                </li>
+                <li>
+                    <a href="/contact">Contact</a>
+                </li>
+                <li>
+                    <a href="/gift-vouchers">Gift Vouchers</a>
+                </li>
+                <li class="plant-finder"><a href="/plant-finder"><img src="{{ asset('images/icon-plant-finder-sm.png') }}" alt="Plant Finder" /> Plant Finder Tool</a></li>
+                <li id="search-popup">
+                    <a href="#searchModal" data-toggle="modal"><i class="fa fa-search"></i> </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right visible-xs">
+                <li><a href="#"><i class="fa fa-fw fa-shopping-cart"></i> <span class="badge">{{ app.session.get('cart')|length }}</span></a></li>
+                <li><a href="#">Cafe</a></li>
+                {% if logged %}
+                    <li><a href="/member"><i class="fa fa-user fa-fw"></i> {{ app.user.username }}</a></li>
+                    <li><a href="/logout" class="last"><i class="fa fa-power-off fa-fw"></i> Logout</a></li>
+                {% else %}
+                    <li><a data-toggle="modal" data-target="#loginModal" href="#"><i class="fa fa-sign-in fa-fw"></i> Login</a></li>
+                    <li><a href="/register" class="last"><i class="fa fa-user-plus fa-fw"></i> Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

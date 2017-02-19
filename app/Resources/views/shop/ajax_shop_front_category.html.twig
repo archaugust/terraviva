@@ -1,0 +1,76 @@
+<div class="row">
+    {% for item in items %}
+        <div class="mt-25 pad-item">
+        	<div class="row">
+        		<div class="col-md-4">
+                    <a href="javascript:void(0)" onclick="setItem('{{ item.alias }}')">
+                        <figure class="zoom">
+                            <img src="{{ asset('images/listings/s/'~ item.images[0].filename) }}" alt="{{ item.title }}" />
+                        </figure>
+                    </a>
+        		</div>
+        		<div class="col-md-8">
+                    <h3><a href="javascript:void(0)" onclick="setItem('{{ item.alias }}')">{{ item.title }}</a></h3>
+                    <hr />
+                    <div>
+                    	{{ item.description|raw }}
+                    </div>
+                    <hr />
+                    <div class="item-bottom row">
+                    	<div class="col-md-2 syntax-bold price">
+                        	$ {{ item.priceSale|number_format(2) }}
+                        </div>
+                        <div class="col-md-6 syntax-bold availability">
+                        	Availability: 
+                        	<span class="red">
+                        	{% if item.inStock > 0 %}
+                        		IN STOCK
+                    		{% else %}
+                    			OUT OF STOCK <a href="#" class="btn btn-xs btn-primary">Enquire/Order</a>
+                			{% endif %}</span>
+                    	</div>
+                    	<div class="col-md-4" align="right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add to <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% if item.inStock > 0 %}<li><a href="{{ path('cart_add') }}?item={{ item.alias }}">Shopping Cart</a></li>{% endif %}
+                                    <li><a href="#">Wishlist</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        		</div>
+        	</div>
+        </div>
+    {% endfor %}
+    {% if items|length == 0 %}
+        <div class="col-md-12">
+            Sorry, too specific. Please try adding more features to your criteria.
+        </div>
+    {% endif %}
+</div>
+<div align="center" class="mt-25">
+    <ul class="pagination">
+        {% if paginator.prevUrl %}
+            <li><a href="javascript:void(0)" onclick="setPage({{ paginator.prevUrl }})"><i class="fa fa-angle-left"></i></a></li>
+        {% endif %}
+
+        {% for page in paginator.pages %}
+            {% if page.url %}
+                <li {% if page.isCurrent %}class="active"{% endif %}>
+                    <a href="javascript:void(0)" onclick="setPage({{ page.url }})">{{ page.num }}</a>
+                </li>
+            {% else %}
+                <li class="disabled"><span>{{ page.num }}</span></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator.nextUrl %}
+            <li><a href="javascript:void(0)" onclick="setPage({{ paginator.nextUrl }})"><i class="fa fa-angle-right"></i></a></li>
+        {% endif %}
+    </ul>
+    <br />
+    {% if paginator.totalItems > 0 %}Page {{ paginator.currentPage }} of {{ paginator.numPages }} | Showing {{ paginator.currentPageFirstItem }} - {{ paginator.CurrentPageLastItem }} of {{ paginator.totalItems }} Items{% endif %}
+</div>

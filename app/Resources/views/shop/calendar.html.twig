@@ -1,0 +1,77 @@
+{% extends 'base_full.html.twig' %}
+{% block title %}Garden Calendar{% endblock %}
+{% block body %}
+    <div class="panel panel-default panel-calendar text-center" id="garden_calendar">
+        <div class="panel-heading">
+            <div class="container">
+                <h1>
+                    <i class="fa fa-calendar mb-15"></i><br />
+                    Garden Calendar
+                </h1>
+                <br />
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ calendar.description|raw }}
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+        {% for item in calendar.items %}
+        <div class="panel-heading panel-subheading" role="tab" style="background: #{{ item.bgColor }}">
+            <a role="button" data-toggle="collapse" href="#collapseMonths_{{ item.id }}" aria-expanded="true" aria-controls="collapseMonths_{{ item.id }}">
+                <h2 class="mb-5"><b>{{ item.title }}</b> <i class="fa fa-angle-down"></i></h2>
+            </a>
+        </div>
+        <div id="collapseMonths_{{ item.id }}" class="panel-collapse collapse in" role="tablist" aria-labelledby="garden_calendar">
+            <div class="image">
+                <img src="{{ asset('images/calendars/'~ item.filename) }}" />
+            </div>
+            <ul class="list-group">
+            	{% for m in 1..12 %}
+            		{% set month = m|date('2017-'~ m ~'-1')|date('F') %}
+                <li class="list-group-item" role="tab" id="heading{{ month ~'_'~ item.id }}">
+                    <a role="button" data-toggle="collapse" data-parent="#collapseMonths_{{ item.id }}" href="#collapse{{ month ~'_'~ item.id }}" aria-expanded="true" aria-controls="collapse{{ month ~'_'~ item.id }}">
+                        <h3 class="month">{{ month }} <i class="fa fa-fw fa-angle-down"></i></h3>
+                    </a>
+                    <div id="collapse{{ month ~'_'~ item.id }}" class="panel-collapse collapse in panel-month-info" role="tabpanel" aria-labelledby="heading{{ month ~'_'~ item.id }}">
+                        <div class="container pad">
+                            <div class="col-md-8 col-md-offset-2">
+                                {{ attribute(item, month|lower)|raw }}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{ asset('css/calendar.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#garden_calendar .collapse').collapse();
+
+        function invert_arrow(element) {
+            i = element.find('i');
+            if (i.hasClass('fa-angle-down')) 
+                i.removeClass('fa-angle-down').addClass('fa-angle-up');
+            else 
+                i.removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+
+        $('h2.mb-5').click(function (){
+        	invert_arrow($(this));
+        });
+
+        $('h3.month').click(function (){
+            invert_arrow($(this));
+        })
+    </script>
+{% endblock %}

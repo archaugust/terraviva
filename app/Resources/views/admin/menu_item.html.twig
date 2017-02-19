@@ -1,0 +1,43 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <form method="post" name="delete">
+    <div><a href="{{ path('admin_menu_page_add', { 'id': menu_id }) }}" class="btn btn-primary">New Menu Item</a> <input type="submit" name="submit" class="btn btn-primary" value="Delete"></div>
+    <br />
+    <div class="clear-fix"></div>
+    <table class="table table-bordered table-hover table-responsive mt-10">
+        <thead>
+        <tr>
+            <th width="30"><input type="checkbox" id="checkAll"></th>
+            <th><a href="?sort=title{% if app.request.query.get('sort') == 'title' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Title</a>
+            </th>
+            <th>Alias</th>
+            <th>Page Type</th>
+            <th>Page Type ID / Route</th>
+            <th width="100"><a href="?sort=sortOrder{% if app.request.query.get('sort') == 'sortOrder' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Sort Order</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for content in contents %}
+            <tr>
+                <td><input type="checkbox" name="delete[{{ content.id }}]" value="{{ content.id }}"></td>
+                <td><a href="/admin/menu/page/edit/{{ menu_id }}/{{ content.id }}/">{{ content.title }}</a></td>
+                <td>{{ content.alias }}</td>
+                <td>{{ content.pageType }}</td>
+                <td>{{ content.pageTypeId }}</td>
+                <td align="right">{{ content.sortOrder }}</td>
+            </tr>
+            {{ render(controller('CmsBundle:Content:menuItemChildren', {'menu_id': menu_id,'parent': content.id})) }}
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+</script>
+{% endblock %}
+

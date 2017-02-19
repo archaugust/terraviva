@@ -1,0 +1,34 @@
+	<div class="mt-25">
+		<h4>Related Products</h4>
+		<hr class="thick" />
+		<div class="row related">
+		{% if related_items|length > 0 %}
+			{% for item in related_items %}
+				{% set image = item.images %}
+    			<div class="col-md-20">
+    				<a href="{{ path('shop_item', {'alias':item.alias}) }}">
+    				<figure class="zoom">
+    					<img src="{{ asset('images/listings/s/'~ image[0].filename) }}" alt="{{ item.title }}" />
+    					<figcaption>
+    						{{ item.title }}
+    						<div class="lato light">{{ item.descriptionShort|raw|slice(0,100) }}</div>
+    						<span class="lato bold red">${{ item.priceSale|number_format(2) }}</span>
+    					</figcaption>
+    				</figure>
+    				</a>
+    			</div>
+			{% endfor %}
+		{% else %}
+			<div class="col-md-20">
+				No related items yet.
+			</div>	
+		{% endif %}
+		</div>
+	</div>
+    <hr>
+    <div class="bottom-info text-center">
+        {% if category.categoryInfo is not null %}
+        <a href="{{ path('shop_category_info',{'alias':category.alias}) }}"><img src="{{ asset('images/icon-info.png') }}" alt="Info" /> <h3>After for more {{ category.title }} info? <span class="normal">Check out our how-to resources for {{ category.title }} here.</span> </h3></a>
+        {% endif %}
+    </div>
+    <hr>

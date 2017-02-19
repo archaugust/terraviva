@@ -1,0 +1,96 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div><a href="{{ path('admin_menu_page', {'id': menu_item.menuId }) }}" class="btn btn-primary">View All</a> <a href="{{ path('admin_menu_page_add', { 'id': menu_item.menuId }) }}" class="btn btn-primary">New Menu Item</a> </div>
+    <br />
+    {{ form_start(form, { attr: {'id':'form'} }) }}
+    {{ form_errors(form) }}
+    <div class="animated fadeInUp row">
+        <div class="col-md-6">
+    <fieldset class="form-group">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.title) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.page_type, 'Page Type') }}
+        {{ form_widget(form.page_type, {value: menu_item.pageType, 'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.page_type) }}
+    </fieldset>
+    <fieldset class="form-group">
+        <div id="pageTypeIdDiv">
+        {{ form_label(form.page_type_id, 'Page') }}
+        {{ form_widget(form.page_type_id, {value: menu_item.pageTypeId, 'attr': {'class': 'form-control', 'placeholder': 'Select Page Type First'}}) }}
+        </div>
+        {{ form_errors(form.page_type_id) }}
+    </fieldset>
+    <fieldset class="form-group">{{ form.parent_id.vars.value }}
+        {{ form_label(form.parent_id, 'Parent') }}
+        {{ form_widget(form.parent_id, {value: menu_item.parentId|trans, 'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.parent_id) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.sort_order) }}
+        <div id="parentIdDiv">
+        {{ form_widget(form.sort_order, {value: menu_item.sortOrder|trans}) }}
+        </div>
+        {{ form_errors(form.sort_order) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.saveAndAdd) }}
+        </div>
+    </div>
+    </fieldset>
+</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function loadPageItems(){
+            var pageType = $('#menu_item_page_type').val();
+            var pageTypeId = $('#menu_item_page_type_id').val();
+
+            $('#pageTypeIdDiv').html('<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('ajax_page_type_items') }}",
+                data: 'id='+pageType+'&id2='+pageTypeId,
+                success: function (data) {
+                    $('#pageTypeIdDiv').html(data);
+                }
+            })
+        }
+
+        function loadSortOrder(){
+            var parentId = $('#menu_item_parent_id').val();
+            var sortOrder = $('#menu_item_sort_order').val();
+            var menuId = '{{ form.vars.value.menuId }}';
+
+            $('#parentIdDiv').html('<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('ajax_parent_items') }}",
+                data: 'menu_id='+menuId+'&id='+parentId+'&id2='+sortOrder,
+                success: function (data) {
+                    $('#parentIdDiv').html(data);
+                }
+            })
+        }
+
+        $('#menu_item_page_type').change(function(event) {
+            loadPageItems();
+        });
+
+        loadPageItems();
+        loadSortOrder();
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,69 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <p>{{ paginator.totalItems }} found. Showing {{ paginator.currentPageFirstItem }} - {{ paginator.CurrentPageLastItem }}</p>
+    <form method="post" name="delete">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <select name="action" class="form-control">
+                        <option value="">With Checked:</option>
+                        <option value="delete" selected>Delete</option>
+                    </select>
+                </div>
+                <input type="submit" name="submit" class="btn btn-primary" value="Submit">
+            </div>
+        </div>
+        <div class="col-md-9 text-right">{{ paginator|raw }}</div>
+    </div>
+        <table class="table table-bordered table-hover table-responsive mt-10">
+            <thead>
+            <tr>
+                <th width="30"><input type="checkbox" id="checkAll"></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'title' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Title</a></th>
+                <th><a href="?sort=category{% if app.request.query.get('sort') == 'category' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Category</a></th>
+                <th><a href="?sort=category{% if app.request.query.get('sort') == 'province' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Details</a></th>
+                <th><a href="?sort=category{% if app.request.query.get('sort') == 'city' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Description</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'date_added' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Date Added</a></th>
+                <th>Picture</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for content in contents %}
+                <tr>
+                    <td><input type="checkbox" name="delete[{{ content.id }}]" value="{{ content.id }}"></td>
+                    <td><a href="/admin/directory/listing/edit/{{ content.id }}">{{ content.title }}</a><br />
+                            {{ content.user }}
+                        </td>
+                    <td>
+                        {{ content.category }}<br />
+                        {{ content.province }}<br />
+                        {{ content.city }}
+                    </td>
+                    <td>
+                        {{ content.address }}<br />
+                        {{ content.phone }}<br />
+                        {{ content.website }}<br />
+                        {{ content.email }}<br />
+                        {{ content.fax }}<br />
+                    </td>
+                    <td>{{ content.description }}</td>
+                    <td>
+                        {{ content.dateAdded|date("m.d.Y H:i:s")  }}
+                    </td>
+                    <td><img style="width: 200px" src="{{ asset('images/listings/'~ content.picture) }}" /></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+{% endblock %}
+

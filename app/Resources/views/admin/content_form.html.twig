@@ -1,0 +1,57 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div><a href="{{ path('admin_content', {'cat_id':cat_id}) }}" class="btn btn-primary">View All</a></div>
+    <br />
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+<div class="animated fadeInUp row">
+    <div class="col-md-6">
+    <fieldset class="form-group">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title) }}
+        {{ form_errors(form.title) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.category) }}
+        {{ form_widget(form.category) }}
+        {{ form_errors(form.category) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.content) }}
+        {{ form_widget(form.content) }}
+        {{ form_errors(form.content) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_label(form.image) }}
+        {% if form.image.vars.value is not empty %}
+            <div class="row">
+                <div class="col-md-2 mb-15">
+                    <img src="{{ asset(form.image.vars.value) }}" class="img-responsive" />
+                </div>
+            </div>
+        {% endif %}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.saveAndAdd) }}
+    </fieldset>
+    </div>
+</div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+    {% if app.request.get('admin') != 1 %}
+	<script>
+		$(function(){
+			$('#content_category').val({{ cat_id }});
+			$('#content_category').parent().hide();
+		})
+	</script>
+    {% endif %}
+{% endblock %}

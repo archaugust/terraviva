@@ -1,0 +1,281 @@
+{% extends 'base_full.html.twig' %}
+{% block title %}Plant Finder{% endblock %}
+{% block body %}
+<div class="container finder">
+    <p><strong>Find the right plant for the right place with<br /> the Terra Viva Plant Finder</strong></p>
+    <br />
+    <p class="intro">So you have an empty space in your garden but aren’t quite sure what sort of plant will work there. Quit agonising and allow our Plant Finder Tool to help you decide. Simply select the conditions below that apply to your empty space, then browse through the available options. Remember to make notes of your findings before you come in, and we can help you choose the best plant to suit.</p>
+
+	<div class="options">
+        <div class="spacer"></div>
+    
+        <h1>1. Soil Moisture</h1>
+        <h2>(Select one)</h2>
+
+		<div class="row" id="moisture">
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-moisture-dry.png') }}" alt="Quite Dry" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Quite Dry</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-moisture-normal.png') }}" alt="Normal" />
+					<figcaption>
+						<div class="a"><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Normal</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-moisture-wet.png') }}" alt="Quite Dry" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Quite Wet</strong>
+			</div>
+		</div>
+
+		<div class="spacer"></div>
+		<h1>2. Soil Type</h1>
+		<h2>(Select one)</h2>
+
+		<div class="row" id="type">
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-type-soft.png') }}" alt="Soft/Sandy" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Soft/Sandy</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-type-normal.png') }}" alt="Normal" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Normal</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-type-hard.png') }}" alt="Hard/Clay" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Hard/Clay</strong>
+			</div>
+		</div>
+
+		<div class="spacer"></div>
+		<h1>3. Light</h1>
+		<h2>(Select one)</h2>
+
+		<div class="row" id="light">
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-light-fullshade.png') }}" alt="Full Shade" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Full Shade</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-light-partshade.png') }}" alt="Part Shade" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Part Shade</strong>
+			</div>
+			<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-light-fullsun.png') }}" alt="Full Sun" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Full Sun</strong>
+			</div>
+		</div>
+
+		<div class="spacer"></div>
+		<h1>4. Wind/Exposure</h1>
+		<h2>(Select multiple)</h2>
+
+    	<div class="row" id="wind">
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-wind-sheltered.png') }}" alt="Sheltered" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Sheltered</strong>
+    		</div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-wind-partsheltered.png') }}" alt="Part Sheltered" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Part Sheltered</strong>
+    		</div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-wind-exposed.png') }}" alt="Exposed" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>Exposed</strong>
+    		</div>
+    	</div>
+
+		<div class="spacer"></div>
+		<h1>5. Desired Plant Height</h1>
+		<h2>(Select multiple)</h2>
+
+    	<div class="row" id="height">
+    		<div class="col-xs-2"></div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-height-0-50cm.png') }}" alt="0-50cm" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>0-50cm</strong>
+    		</div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-height-50cm-1m.png') }}" alt="50cm-1m" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>50cm-1m</strong>
+    		</div>
+    		<div class="col-xs-2"></div>
+    		<div class="clearfix"></div><br />
+    		<div class="col-xs-2"></div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-height-1m-3m.png') }}" alt="1m-3m" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>1m-3m</strong>
+    		</div>
+    		<div class="col-xs-4">
+				<figure>
+					<img src="{{ asset('images/pf-height-3m.png') }}" alt="3m+" />
+					<figcaption>
+						<div><img src="{{ asset('images/pf-tick.png') }}" alt="Checked" /></div>
+					</figcaption>
+				</figure>
+				<strong>3m+</strong>
+    		</div>
+    		<div class="col-xs-2"></div>
+    	</div>
+    	
+    	<div class="spacer"></div>
+
+    	<form id="plant-finder" method="post">
+        	<div id="submit">
+        		So, you’re looking for a <b><span id='text_height'></span> tall</b> plant that will grow well in <b><span id="text_moisture"></span>, <span id="text_type"></span> soil</b> in <b id="text_light"></b> in a <b><span id="text_wind"></span> position</b> - correct? If so, hit the button below and let’s get searching!</p>
+        		<div class="spacer"></div>
+        		<button type="submit" class="btn btn-lg btn-primary btn-show">Show Me Plants!</button>
+    		</div>
+
+    		<input type="hidden" name="moisture" />
+    		<input type="hidden" name="type" />
+    		<input type="hidden" name="light" />
+    		<input type="hidden" name="wind" />
+    		<input type="hidden" name="height" />
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{ asset('css/plantfinder.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    	$('figure').click(function(){
+        	parent = $(this).parent().parent().attr('id');
+    		text = $(this).parent().find('strong').text();
+
+        	if ($(this).find('> figcaption').hasClass('show')) { // uncheck
+            	$(this).find('> figcaption').removeClass('show');
+
+	        	if (parent != 'wind' && parent != 'height') {
+            		text = '';
+            		$('input[name="'+ parent +'"]').val('');
+        		}
+        		else {
+            		current = $('input[name="'+ parent +'"]').val().split(', '); // convert input value to array
+        			current.splice( $.inArray(text, current), 1 ); // remove item from array
+
+        			text = current.join(' or ').toLowerCase();
+            		$('input[name="'+ parent +'"]').val(current.join(', '));
+            	}
+            } 
+        	else {
+
+        		if (parent != 'wind' && parent != 'height') {
+            		$('#'+ parent +' figcaption').removeClass('show');
+
+            		$('input[name="'+ parent +'"]').val(text);
+            		if (parent != 'light')
+                		text += ' ' + parent;
+            	}
+            	else {
+                	current = $('input[name="'+ parent +'"]').val();
+                	if (current != '')
+            			current = ($('input[name="'+ parent +'"]').val()).split(', ');
+                	else 
+                    	current = new Array();
+            		if ($.inArray(text.toLowerCase(), current) == -1) {
+                		current.push(text);
+                		text = current.join(' or ').toLowerCase();
+                		$('input[name="'+ parent +'"]').val(current.join(', '));
+                	}
+            	}
+
+
+            	h = ($(this).find('> img').height() - $(this).find('> figcaption > div > img').height()) / 2;
+            	$(this).find('> figcaption').addClass('show').css('margin-top',h);
+        	}
+
+        	$('#text_'+ parent).text(text.toLowerCase());
+
+            var empty = $('#plant-finder').find("input").filter(function() {
+                return this.value === "";
+            });
+
+            if(empty.length) 
+            	$('#submit').hide('slow');
+            else
+                if (!$('#submit').is(':visible'))         	 
+	    			$('#submit').show('slow');
+        });
+    </script>
+{% endblock %}

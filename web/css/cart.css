@@ -1,0 +1,30 @@
+.cart_item {
+    margin: 10px 0;
+    padding-top: 10px;
+    border-top: 1px dotted #222;
+    clear: both;
+}
+.cart_item h3 {
+    text-transform: none;
+}
+.cart_item figure {
+    margin: 0 -15px;
+    max-width: 300px;
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.cart_item figure img {
+    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+    transition: opacity 0.35s, transform 0.35s;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.cart_item figure:hover img {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+.pad-content {
+    padding: 50px 15px;
+}

@@ -1,0 +1,9 @@
+<select id="product_category_ordering" name="product_category[ordering]" class="form-control">
+    <option value="1">First</option>
+    {% set last = 1 %}
+    {% for category in categories %}
+    <option value="{{ category.ordering }}" {% if category.ordering == selected and selected != 0 %} selected="selected"{% endif %}>{{ category.title }}</option>
+        {% set last = category.ordering +1 %}
+    {% endfor %}
+    <option value="{{ last }}"{% if selected == 0 %} selected{% endif %}>Last</option>
+</select>

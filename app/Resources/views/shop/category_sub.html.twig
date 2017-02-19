@@ -1,0 +1,45 @@
+{% extends 'base_shop.html.twig' %}
+{% block title %}{{ category.title }}{% endblock %}
+{% block description %}{{ category.description }}{% endblock %}
+{% block breadcrumbs %}{% for breadcrumb in breadcrumbs %} <i class="fa fa-angle-left fa-fw"></i> <a href="/shop/category/{{ breadcrumb.alias }}">{{ breadcrumb.title }}</a>{% endfor %}{% endblock %}
+{% block sidebar %}
+	{% include 'shop/sidebar_main.html.twig' %}
+{% endblock %}
+
+{% block body %}
+    <h1>{% if category.title == 'Plants' %}Our Plant Range{% else %}{{ category.title }}{% endif %}</h1>
+    {% if category.image is empty %}
+    	{% set image = 'no-image.png' %}
+    {% else %}
+    	{% set image = category.image %}
+    {% endif %}
+    <img class="mt-25 mb-15 img-responsive" src="{{ asset('images/categories/banner/'~ image) }}" alt="{{ category.title }}" />
+    <p>{{ category.description|raw }}</p>
+    <div class="row mt-25">
+        {% for item in items %}
+        	{% if item.image == '' %}
+		    	{% set image = 'no-image.png' %}
+        	{% else %}
+        		{% set image = item.image %}
+        	{% endif %}
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ path('shop_category', {'alias':item.alias}) }}">
+                <figure class="zoom">
+                    <img src="{{ asset('images/categories/thumb/'~ image) }}" alt="{{ item.title }}" />
+                    <figcaption>{{ item.title }}</figcaption>
+                </figure>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $('#cat-menu').metisMenu();
+            $('#cat-menu-xs').metisMenu();
+    	});
+    </script>
+{% endblock %}

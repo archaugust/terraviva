@@ -1,0 +1,110 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 mb-15">
+            <a href="{{ path('admin_product_item_add', {'cat_id':cat_id}) }}" class="btn btn-primary">Add New</a> 
+        </div>
+        <div class="col-md-8 text-right">
+            {{ paginator|raw }}
+        </div>
+    </div>
+    <form method="post" name="delete">
+    <table class="table table-bordered table-hover table-responsive">
+        <thead>
+        <tr>
+            <th width="30"><input type="checkbox" id="checkAll"></th>
+            <th width="60"><a href="?sort=id{% if app.request.get('sort') == 'id' %}&order={% if app.request.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}&page={{ app.request.get('page') }}&cat_id={{ app.request.get('cat_id') }}">ID</a></th>
+            <th width="15%"><a href="?sort=title{% if app.request.get('sort') == 'title' %}&order={% if app.request.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}&page={{ app.request.get('page') }}&cat_id={{ app.request.get('cat_id') }}">Name</a></th>
+            {% if (cat_id is same as (1)) %}
+            <th width="15%">Category</th>
+            {% endif %}
+            <th>Short Description</th>
+            <th width="15%">Tags</th>
+            <th width="60"><a href="?sort=hits{% if app.request.get('sort') == 'hits' %}&order={% if app.request.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}&page={{ app.request.get('page') }}&cat_id={{ app.request.get('cat_id') }}">Hits</a></th>
+            <th width="60"><a href="?sort=publish{% if app.request.get('sort') == 'publish' %}&order={% if app.request.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}&page={{ app.request.get('page') }}&cat_id={{ app.request.get('cat_id') }}">Publish</a></th>
+            <th width="60"><a href="?sort=featured{% if app.request.get('sort') == 'featured' %}&order={% if app.request.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}&page={{ app.request.get('page') }}&cat_id={{ app.request.get('cat_id') }}">Feature</th>
+            <th width="100">First Image</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            {% if item.images|length > 0 %}
+                {% set images = item.images %}
+                {% set image = images[0].filename %}
+            {% else %}
+                {% set image = 'no-image.jpg' %}
+            {% endif %}
+            <tr>
+                <td><input type="checkbox" name="delete[]" value="{{ item.id }}"></td>
+                <td align="right">{{ item.id }}</td>
+                <td><a href="/admin/product/item/edit/{{ item.id }}">{{ item.title }}</a></td>
+	            {% if (cat_id is same as(1)) %}
+                <td><a href="{{ path('admin_product_category_edit', {'id':item.catId})}}">{{ render(controller('AppBundle:Shop:itemCategory', {'id':item.catId})) }}</a></td>
+                {% endif %}
+                <td>{{ (item.descriptionShort|striptags)|length > 300 ? (item.descriptionShort|striptags)|slice(0,300) ~ '...' : item.descriptionShort|striptags }}</td>
+                <td>
+                	<p><b>Category</b><br />{{ item.filters|join(', ') }}</p>
+                	<p><b>Related</b><br />{{ item.relatedTags }}</p>
+            	</td>
+                <td align="right">{{ item.hits }}</td>
+                <td><input type="checkbox" class="publish" value="{{ item.id }}" {% if item.publish == 1 %} checked{% endif %}></td>
+                <td><input type="checkbox" class="feature" value="{{ item.id }}" {% if item.featured == 1 %} checked{% endif %}></td>
+                <td><img src="{{ asset('images/listings/s/'~ image) }}" style="width: 100px" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" name="submit" class="btn btn-primary" value="Delete Checked">
+    </form>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/notify.min.js') }}"></script>
+<script>
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    $(".publish").on('change', function(){
+        if (this.checked)
+            var toggle = 1;
+        else
+            var toggle = 0;
+         
+        var item = $(this).val();
+
+        $.ajax({
+            url: "{{ path('ajax_product_toggle') }}",
+            data: 'item='+ item +'&toggle='+ toggle +'&mode=published',
+            type: "POST",
+            success: function (data) {
+                $.notify(data, 'info');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Something went wrong. Please try again.')
+            }
+        });
+    });
+
+    $(".feature").on('change', function(){
+        if (this.checked)
+            var toggle = 1;
+        else
+            var toggle = 0;
+         
+        var item = $(this).val();
+
+        $.ajax({
+            url: "{{ path('ajax_product_toggle') }}",
+            data: 'item='+ item +'&toggle='+ toggle +'&mode=featured',
+            type: "POST",
+            success: function (data) {
+                $.notify(data, 'info');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Something went wrong. Please try again.')
+            }
+        });
+    });
+</script>
+{% endblock %}
+

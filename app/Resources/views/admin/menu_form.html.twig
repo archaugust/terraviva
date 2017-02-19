@@ -1,0 +1,25 @@
+{% form_theme form 'form_errors.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div><a href="{{ path('admin_menu') }}" class="btn btn-primary">View All</a> <a href="{{ path('admin_menu_add') }}" class="btn btn-primary">New Menu</a> </div>
+    <br />
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="animated fadeInUp row">
+        <div class="col-md-6">
+    <fieldset class="form-group">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.title) }}
+    </fieldset>
+    <fieldset class="form-group">
+        {{ form_widget(form.save) }}{{ form_widget(form.saveAndAdd) }}
+    </fieldset>
+        </div>
+    </div>
+</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+

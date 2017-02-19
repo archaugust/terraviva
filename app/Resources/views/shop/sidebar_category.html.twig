@@ -1,0 +1,37 @@
+    <div class="clearfix"></div>
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <div>
+                <div class="parent">
+                    <a role="button" data-toggle="collapse" href="#collapseTags" aria-expanded="false" aria-controls="collapseTags">
+                        <span class="hidden-xs">Narrow Your Search</span>
+                        <span class="visible-xs" id="xs-check">{{ category.title }}</span>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+                <div class="collapse in" id="collapseTags">
+                    {% for tagGroup in category.filters %}
+                        {% set tags = tagGroup.tags|split(',') %}
+                        <div class="tag-group">
+                            <div class="tag-title"><b>{{ tagGroup.title|upper }} </b><span class="opa-5"> Select {{ tagGroup.title|lower }}</span></div>
+                            {% for tag in tags %}
+                                <div class="tag-item">
+                                    <input type="checkbox" value="{{ tag }}" name="tag[]" id="{{ tag }}" />
+                                    <label for="{{ tag }}"><div>{{ tag }}</div></label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    {% if category.filters|length == 0 %}
+                        <div class="tag-group">
+                            <div class="tag-title"></div>
+                            <div class="tag-item">
+                                <input type="checkbox" name="tag" id="tag" checked disabled />
+                                <label for="tag"><div>All {{ category.title }}</div></label>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </aside>

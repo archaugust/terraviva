@@ -1,0 +1,8 @@
+{% if (mode == 'form') %}
+	<script>$('#subscribeDiv').show();</script>
+{% elseif mode == 'subscribed' %}
+	<p>That email address is already subscribed. Thank you.</p>
+{% elseif mode == 'success' %}
+	<p>Your have successfully subscribed to our newsletter. Thank you!</p>
+{% endif %} 
+	

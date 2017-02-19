@@ -1,0 +1,312 @@
+.main-slide {
+    font-family: SyntaxLTStd-Black;
+    font-size: 22px;
+    margin-top: 140px;
+    display: block;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    height: 664px;
+    background-size: cover;
+    color: #FFF;
+    position: relative;
+}
+
+.main-slide a h1 {
+    font-size: 50px;
+    color: #FFF;
+}
+.main-slide sup {
+    position: relative;
+    top: -34px;
+    left: 4px;
+    font-size: 60%;
+}
+.slide-text {
+    padding-top: 260px;
+}
+
+grid-space-0 > div {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.grid-space-0 .col-md-4,
+.grid-space-0 .col-xs-12 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.carousel-control {
+	background: none!important;
+}
+.carousel-indicators li {
+	display:none;
+}
+.carousel-caption {
+  bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 2;
+  font-size: 13.33px;
+}
+.carousel img.spacer {
+	height:470px;
+}
+.carousel-control .icon-prev,
+.carousel-control .icon-next {
+  width: 34px;
+  height: 75px;
+  margin-top: -37px;
+}
+.carousel-caption .special {
+	position: absolute;
+	bottom: 0;
+	height: 420px;
+	color: #777;
+	text-shadow:none; 
+}
+.carousel-caption h1.feature { 
+	font-family: SyntaxLTStd-UltraBlack;
+	font-size: 59px; 
+    color: #AA272F;
+    margin: 0 0 30px;
+}
+.carousel-caption h3 { color: #333; }
+.carousel-caption h3:hover { color: #666; }
+.carousel-caption .left {
+	text-align: left;
+}
+.carousel-caption .price {
+	position: absolute;
+	bottom: 0;
+	right: 50px;
+	background: url('../images/feature-price.png');
+	width: 146px;
+	height: 130px;
+	color: #FFF;
+	font-size: 17px;
+	padding-top: 28px;
+} 
+.carousel-caption .price h1 {
+	font-size: 52px;
+	margin: 0;
+}
+.carousel-caption .price h1 sup {
+	font-size: 35px;
+	margin-top: 15px;
+}
+
+.view {
+    background: #e7e7e7;
+    width: 100%;
+    height: 100%;
+    float: left;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    cursor: default;
+}
+.view .mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+.view img {
+    width: 100%;
+    display: block;
+    position: relative;
+}
+.view h4 a{
+    color: #333;
+    text-align: center;
+    position: relative;
+    font-size: 40px;
+}
+.view p {
+    margin-top: 10px;
+    position: relative;
+    color: #333;
+    text-align: center
+}
+.view a.info {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 0 1px #333
+}
+.view a.info:hover {
+    color: #333;
+}
+
+.view-text img {
+    transition: all 0.4s ease-in-out 0.5s;
+    -webkit-transition: all 0.4s ease-in-out 0.5s;
+}
+.view-text .mask{
+    background-color: rgba(255,255,255,.7);
+    opacity:0;
+    transition: all 0.3s ease-in 0.4s;
+    -webkit-transition: all 0.3s ease-in 0.4s;
+}
+.view-text h4{
+    opacity:0;
+    background: transparent;
+    margin: 20px 40px 0px 40px;
+    transition: all 0.3s ease-in-out 0.1s;
+    -webkit-transition: all 0.3s ease-in-out 0.1s;
+}
+.view-text p {
+	font-size:25px;
+    opacity:0;
+    transition: all 0s ease-in-out 0s;
+    -webkit-transition: all 0.3s ease-in-out 0.2s;
+    padding: 0 80px;
+}
+.view-text a.info {
+    opacity:0;
+    transform: translateY(100px);
+    -webkit-transform: translateY(100px);
+    transition: all 0.3s ease-in-out 0.1s;
+    -webkit-transition: all 0.3s ease-in-out 0.1s;
+}
+
+.view-text:hover .mask {
+    opacity:1;
+    transition-delay: 0s;
+    -webkit-transition-delay: 0s;
+}
+.view-text:hover img {
+    transition-delay: 0s;
+    -webkit-transition-delay: 0s;
+}
+.view-text:hover h4 {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 0.1s;
+    -webkit-transform: scale(1);
+    -webkit-transition-delay: 0.1s;
+}
+.view-text:hover p {
+    opacity:1;
+    transform: scale(1);
+    transition-delay: 0.2s;
+    -webkit-transform: scale(1);
+    -webkit-transition-delay: 0.2s;
+}
+.view-text:hover a.info {
+    opacity:1;
+    transform: translateY(0px);
+    transition-delay: 0.3s;
+    -webkit-transform: translateY(0px);
+    -webkit-transition-delay: 0.3s;
+}
+
+@media (max-width: 767px) {
+	.main-slide {
+        height:400px;
+        margin-top:-60px;
+        background-position: center;
+    }
+	.main-slide a h1 {
+        font-size: 36px;
+    }
+    .main-slide sup {
+        position: relative;
+        top: -5px;
+        font-size: 70%;
+    }
+    .slide-text {
+        padding-top: 100px;
+    }
+	.carousel img.spacer {
+		height:520px;
+	}
+	.carousel-caption .special {
+		position: absolute;
+		bottom: 0;
+		height: 500px;
+		color: #333;
+		text-shadow:none; 
+		font-size: 13px;
+		line-height: 1.5;
+	}
+	.carousel-caption h1.feature { 
+		font-family: SyntaxLTStd-UltraBlack;
+		font-size: 29px; 
+	    color: #AA272F;
+	    margin: 15px;
+	}
+	.carousel-caption img {
+		width: 80%;
+	}
+	.carousel-caption h3 { 
+		color: #333;
+		font-size: 20px; 
+	}
+	.carousel-caption .left {
+		text-align: center;
+		max-height: 170px;
+		overflow: hidden;
+	}
+	.carousel-caption .price {
+		position: absolute;
+		bottom: 0;
+		background: url('../images/feature-price.png');
+		background-size: cover;
+		width: 67px;
+		height: 60px;
+		color: #FFF;
+		font-size: 12px;
+		padding-top: 15px;
+	} 
+	.carousel-caption .price h1 {
+		font-size: 22px;
+		margin: 0;
+	}
+	.carousel-caption .price h1 sup {
+		font-size: 16px;
+		margin-top: 30px;
+	}
+    .view img {
+        width: 100%;
+        display: block;
+        position: relative;
+    }
+    .view h4 a{
+        color: #333;
+        text-align: center;
+        position: relative;
+        font-size: 30px;
+    }
+    .view-text h4{
+        opacity:0;
+        background: transparent;
+        margin: 0 40px;
+        transform: scale(10);
+        transition: all 0.3s ease-in-out 0.1s;
+        -webkit-transform: scale(10);
+        -webkit-transition: all 0.3s ease-in-out 0.1s;
+    }
+	.view-text p {
+		font-size:18px;
+	    padding: 0 20px;
+	}
+}
+
+@media (max-width: 359px) {
+    .view .mask, .view .content {
+        padding: 40px 20px 10px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+	.main-slide {
+	    margin-top: 90px;
+	}
+	.main-slide a h1 {
+		padding: auto
+	}
+}
+

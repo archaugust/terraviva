@@ -1,0 +1,42 @@
+{% extends 'base_content_top.html.twig' %}
+{% block title %}Plant Finder{% endblock %}
+{% block sidebar %}
+	{% include 'shop/sidebar_main.html.twig' %}
+{% endblock %}
+{% block content_top %}
+	<div class="text-center">
+    	<h1 class="results">Here are your Results</h1>
+    	<br />
+    	<p class="results-intro">Based on your seach for a {{ data.height }} tall plant that will grow well in {{ data.moisture }}, {{ data.type }} soil in {{ data.light }} in a {{ data.wind }} position, here are the search results. Remember to make notes so we can help you with your options when you next come in.</p>
+    	<br />
+	</div>
+	<hr class="thick" /><br />
+{% endblock %}
+{% block body %}
+<div class="container">
+	{% for item in results %}
+	<div class="row row-results">
+		<div class="col-md-2 col-sm-4"><img src="{{ asset('images/categories/thumb-finder/'~ item.category.image) }}" class="img-responsive" alt="{{ item.category.title }}" /></div>
+		<div class="col-md-10 col-sm-8">
+			<h3>{{ item.category.title }}</h3>
+			<p>{{ item.category.description }}<br />
+				<a href="{{ path('shop_category', {'alias':item.category.alias}) }}">See our range of {{ item.category.title }}</a>
+			</p>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{ asset('css/plantfinder.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $('#cat-menu').metisMenu();
+            $('#cat-menu-xs').metisMenu();
+    	});
+    </script>
+{% endblock %}

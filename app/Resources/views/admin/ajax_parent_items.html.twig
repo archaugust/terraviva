@@ -1,0 +1,6 @@
+<select id="menu_item_sort_order" name="menu_item[sort_order]" class="form-control">
+    <option value="1">First</option>
+    {% for item in items %}
+    <option value="{{ item.sortOrder }}" {% if item.sortOrder == sort_order %} selected="selected"{% endif %}>{{ item.title }}</option>
+    {% endfor %}
+</select>

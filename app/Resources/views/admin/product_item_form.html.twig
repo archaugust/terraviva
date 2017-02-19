@@ -1,0 +1,151 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <a href="{{ path('admin_product_item', {'cat_id': cat_id}) }}" class="btn btn-primary mb-15">View All</a>
+    <br />
+    {{ form_start(form, { attr: {'id':'form'} }) }}
+    {{ form_errors(form) }}
+<div class="animated fadeInUp">
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.title) }}
+            {{ form_row(form.publish) }}
+            {{ form_row(form.featured) }}
+            {{ form_row(form.subtitle) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.code) }}
+            {{ form_row(form.related_tags) }}
+            {{ form_row(form.description_short) }}
+            {{ form_row(form.description) }}
+            <h3 class="mt-20">Images</h3>
+            <fieldset class="form-group">
+                <div class="clearfix"></div>
+                <ul class="images list-unstyled" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+                    {% for image in form.images %}
+                        <li class="tag-group col-md-3">
+                            <img src="{{ asset('images/listings/s/'~ image.vars.value.filename) }}" class="img-responsive mb-15" />
+                            <div class="hidden">{{ form_row(image.filename) }}</div>
+                            <input type="hidden" name="image[]" value="{{ image.vars.value.id }}" />
+                        </li>
+                    {% endfor %}
+                </ul>
+            </fieldset>
+            {{ form_widget(form.save, {'attr':{'class':'btn btn-primary'}}) }}
+            {{ form_widget(form.saveAndAdd, {'attr':{'class':'btn btn-primary'}}) }}
+        </div>
+        <div class="col-md-6">
+            <h3>Category Specific Tags</h3>
+            <div id="tagsDiv">Select a Category first.</div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/tags.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% set id = form.vars.value.id %}
+    {% if id is empty %}
+        {% set id = 0 %}
+    {% endif %}
+    <script src="{{ asset('js/tags.js') }}"></script>
+    <script>
+        const loader = '<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>';
+        $('#product_item_category').change(function(event) {
+            var cat_id = $('#product_item_category').val();
+            var id = {{ id }};
+            $('#tagsDiv').html(loader);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{{ path('ajax_item_category_tags') }}",
+                data: 'id='+id+'&cat_id='+cat_id,
+                success: function (data) {
+                    $('#tagsDiv').hide().html(data).fadeIn(300);
+                }
+            });
+
+        });
+
+        var $collectionHolder;
+
+        var $addImageLink = $('<a href="#" class="add_image_link btn btn-default">Add Image</a>');
+        var $newLinkLi = $('<li></li>').append($addImageLink);
+
+        jQuery(document).ready(function() {
+            $collectionHolder = $('ul.images');
+
+            $collectionHolder.find('li').each(function() {
+                addImageFormDeleteLink($(this));
+            });
+
+            $collectionHolder.append($newLinkLi);
+
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addImageLink.on('click', function(e) {
+                e.preventDefault();
+
+                addImageForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addImageForm($collectionHolder, $newLinkLi) {
+            var prototype = $collectionHolder.data('prototype');
+
+            var index = $collectionHolder.data('index');
+
+            var newForm = prototype.replace(/__name__/g, index);
+
+            $collectionHolder.data('index', index + 1);
+
+            var $newFormLi = $('<li class="tag-group"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addImageFormDeleteLink($newFormLi);
+        }
+
+        function addImageFormDeleteLink($imageFormLi) {
+            var $removeFormA = $('<a href="#" class="btn btn-default btn-sm">Remove this Image</a>');
+            $imageFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag form
+                $imageFormLi.remove();
+            });
+        }
+
+        {% if form.vars.value.catId > 0 %}
+        $(window).load(function() {
+            $('#product_item_category').trigger('change');
+        });
+        {% endif %}
+
+        $(function() {
+            $('.tags').tagsInput( {
+                'defaultText':'Add a tag',
+                'width':'100%',
+                'height':'44px'
+            });
+
+            {% if (cat_id) %}
+            	$('#product_item_category').val({{ cat_id }}).trigger('change').parent().hide();
+            {% endif %}
+        })
+
+    </script>
+
+{% endblock %}
+
+

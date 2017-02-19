@@ -1,0 +1,68 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'base.html.twig' %}
+{% block title %}{{ content.title }}{% endblock %}
+{% block body %}
+<section id="content" class="content-form">
+	<div class="container">
+		<h1>{{ content.title }}</h1>
+    	{{ content.content|raw }}
+        <div class="animated fadeIn">
+            <div class="row" id="contactDiv">
+	            {{ form_start(form, {'attr':{'id':'form_contact'}}) }}
+            	<div class="col-md-6">
+                    <fieldset class="form-group">
+                        {{ form_label(form.fname) }}
+                        {{ form_widget(form.fname) }}
+                        {{ form_errors(form.fname) }}
+                    </fieldset>
+                </div>
+            	<div class="col-md-6 last">
+            		<fieldset class="form-group">
+            			{{ form_label(form.lname) }}
+	            	    {{ form_widget(form.lname) }}
+	            	    {{ form_errors(form.lname) }}
+            		</fieldset>
+                </div>
+            	<div class="col-md-6">
+                    <fieldset class="form-group">
+                        {{ form_label(form.email) }}
+	            	    {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </fieldset>
+                </div>
+            	<div class="col-md-6 last">
+            		<fieldset class="form-group">
+            			{{ form_label(form.phone) }}
+            	        {{ form_widget(form.phone) }}
+            	        {{ form_errors(form.phone) }}
+            		</fieldset>
+                </div>
+            	<div class="col-md-6">
+                    <fieldset class="form-group">
+                        {{ form_label(form.message) }}
+	            	    {{ form_widget(form.message, {'attr':{'style':'height: 170px'}}) }}
+                        {{ form_errors(form.message) }}
+                    </fieldset>
+            	</div>
+            	<div class="col-md-6 last">
+            		<fieldset class="form-group">
+		    			<label>Please Confirm*</label>
+			    		<div class="g-recaptcha" data-sitekey="6LcrFQ0UAAAAAF_jSy3fBeIZG9OS9g8M68u_lncq"></div>
+		    		</fieldset>
+            	</div>
+            	<div class="col-md-12">
+                    <fieldset class="form-group">
+                	    {{ form_widget(form.send, {'attr':{'class':'btn btn-primary sharp'}}) }}
+                    </fieldset>
+            	</div>
+	            {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="{{ asset('js/contact.js') }}"></script>
+{% endblock %}

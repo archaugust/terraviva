@@ -1,0 +1,122 @@
+{% form_theme form 'form_errors.html.twig' %}
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <div class="mb-15"><a href="{{ path('admin_directory_listing') }}" class="btn btn-primary">View All</a>
+<div class="row">
+    {{ form_start(form, {'attr': {'enctype':'multipart/form-data'}}) }}
+    {{ form_errors(form) }}
+    <div class="col-md-6">
+        <div class="animated fadeInDown">
+            <fieldset class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.category) }}
+                <div id="categoryDiv">
+                {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                {{ form_errors(form.category) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.province) }}
+                {{ form_widget(form.province, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.province) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.city_id) }}
+                <div id="cityDiv">
+                {{ form_widget(form.city_id, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                {{ form_errors(form.city_id) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.address) }}
+                {{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+                <a href="#" id="locate" class="btn btn-default">Locate at Map</a>
+                {{ form_errors(form.address) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.phone) }}
+                {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.phone) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.fax) }}
+                {{ form_widget(form.fax, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.fax) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.email) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.website) }}
+                {{ form_widget(form.website, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.website) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="add_more">Pictures</label>
+                <br />
+                {% if images|length > 0 %}
+                    <div class="row">
+                        {% for image in images %}
+                            <div class="col-md-2">
+                                <img src="{{ asset('images/listings/m/'~ image.filename) }}" style="max-width: 100%" />
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div id="images">
+                    <input type="file" name="image[]">
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_widget(form.savePending) }}
+                {{ form_widget(form.saveListing) }}
+            </fieldset>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <input type="hidden" id="address" value="{{ form.province.vars.value }}" />
+
+        <div style="width:100%; height:400px;">
+            <div id="map-canvas"></div>
+        </div>
+        <p class="mt-15">You can drag the map marker to point at the exact location if needed.</p>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMya2B7jQ0rrG7iCCQUvRx3uqEm45Jl0w"></script>
+<script src="{{ asset('js/add_listing.js') }}"></script>
+
+<script>
+    $(function() {
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        if ({{ form.cat_id.vars.value }} != 0)
+            $('#ad_category').trigger("change");
+
+        if ($('#ad_city_id').val() != 0)
+            $('#ad_province').trigger("change");
+
+        if ($('#ad_address').val() != '')
+            codeAddress($('#ad_address').val());
+        else
+            codeAddress($('#address').val());
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,6 @@
+<label for="menu_item_page_type_id">Product Category</label>
+<select id="menu_item_page_type_id" name="menu_item[page_type_id]" class="form-control">
+    {% for item in items %}
+        <option value="{{ item.id }}" {% if item.id == id2 %} selected="selected"{% endif %}>{{ item.title }}</option>
+    {% endfor %}
+</select>

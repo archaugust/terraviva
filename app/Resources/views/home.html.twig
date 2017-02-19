@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Terra Viva Home & Garden</title>
+
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body id="page-top" class="index">
+
+<section id="content-header">
+{% include 'header.html.twig' %}
+</section>
+
+<div id="slides" class="container-fluid nopad clearfix animated slideInDown">
+    <div class="main-slide" style="background:url('{{ asset('images/home/'~ content.mainImg) }}')">
+        <div class="slide-text">
+            <a href="{{ content.mainUrl }}"><h1>{{ content.mainTitle }}<sup><i class="fa fa-share-square-o"></i></sup></h1></a>
+            <p>{{ content.mainSubtitle }}</p>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="container-fluid nopad row grid-space-0 animated fadeInUp">
+    <div class="col-xs-12 col-md-4">
+        <div class="text-center">
+            <div class="view view-text">
+                <img src="{{ asset('images/home/'~ content.thumb1Img) }}" class="img-responsive">
+                <div class="mask">
+            		<div class="mask-text">
+                        <h4 class="margin-clear animated fadeIn"><a href="{{ content.thumb1Url }}">{{ content.thumb1Title }}</a></h4>
+                        <p class="serif">{{ content.thumb1Subtitle }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <div class="text-center">
+            <div class="view view-text">
+                <img src="{{ asset('images/home/'~ content.thumb2Img) }}" class="img-responsive">
+                <div class="mask">
+                    <div class="mask-text">
+                        <h4 class="margin-clear animated fadeIn"><a href="{{ content.thumb2Url }}">{{ content.thumb2Title }}</a></h4>
+                        <p class="serif">{{ content.thumb2Subtitle }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <div class="text-center">
+            <div class="view view-text">
+                <img src="{{ asset('images/home/'~ content.thumb3Img) }}" class="img-responsive">
+                <div class="mask">
+                    <div class="mask-text">
+                        <h4 class="margin-clear animated fadeIn"><a href="{{ content.thumb3Url }}">{{ content.thumb3Title }}</a></h4>
+                        <p class="serif">{{ content.thumb3Subtitle }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<section id="content-top" class="container-fluid bg-light text-center">
+    <div class="container content-top">
+            <h1 class="mb-15 normal">Christchurch's Iconic Home & Garden Destination</h1>
+            <p class="serif">Terra Viva has been a well-known destination since 1997, offering a delightful abundance of quality plants for the garden and desirable wares for the home.
+            Paired with honest, friendly and knowledgeable advise, the Terra Viva experience goes unrivalled in Christchurch.
+            With a popular cafe (judged Christchurch's best cafe in 2014) and full landscape design service under the same roof,
+            Terra Viva is well loved by both gardeners and foodies alike.</p>
+    </div>
+</section>
+<section id="content-main" class="container-fluid content-main">
+    <div id="alertsDiv">
+        {% for type, messages in app.session.flashBag.all %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="container">
+    {% block body %}{% endblock %}
+    </div>
+</section>
+
+{% include 'footer.html.twig' %}
+
+{% block javascripts %}
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+{% endblock %}
+</body>
+
+</html>

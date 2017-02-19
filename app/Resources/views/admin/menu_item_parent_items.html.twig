@@ -1,0 +1,10 @@
+{% for item in items %}
+    <tr>
+        <td><input type="checkbox" name="delete[{{ menu_id }}-{{ item.id }}]" value="{{ menu_id }}-{{ item.id }}"></td>
+        <td><i class="fa fa-fw fa-minus"></i> <a href="/admin/menu/page/edit/{{ menu_id }}/{{ item.id }}/">{{ item.title }}</a></td>
+        <td>{{ item.alias }}</td>
+        <td>{{ item.pageType }}</td>
+        <td>{{ item.pageTypeId }}</td>
+        <td align="right">{{ item.sortOrder }} <i class="fa fa-fw fa-minus"></i></td>
+    </tr>
+{% endfor %}

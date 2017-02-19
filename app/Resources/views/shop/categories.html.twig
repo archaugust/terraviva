@@ -1,0 +1,4 @@
+<select name="cat_id" class="form-control" id="cat_id">\
+    <option value="0">Select Category to List</option>{% for item in items %}<option value="{{ item.id }}"{% if selected == item.id %} selected{% endif %}>{{ item.title }}</option>\
+    {{ render(controller('AppBundle:Shop:subcategoriesFilter', {'id':item.id, 'selected':selected})) }}{% endfor %}\
+</select>

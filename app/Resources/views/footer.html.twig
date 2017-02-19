@@ -1,0 +1,89 @@
+<section id="content-bottom" class="container-fluid bg-dark newsletter">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <h1 class="mt-0 normal syntax-bold">Stay in Touch</h2>
+                <div class="clearfix"><hr class="red"></div>
+                <p>Receive news & information on special promotions, <br />straight to your inbox weekly.</p>
+                <br />
+            </div>
+            <div class="col-md-7">
+                <form id="form_subscribe" method="post">
+              	<div id="subscribeDiv">
+                    <fieldset>
+                        <label for="subscribe_name">First Name *</label>
+                        <input type="text" required name="subscribe_name" id="subscribe_name" class="form-control">
+                    </fieldset>
+                    <fieldset class="mt-10">
+                        <label for="subscribe_email">Email *</label>
+                        <input type="email" required name="subscribe_email" id="subscribe_email" class="form-control">
+                    </fieldset>
+                    <input type="submit" class="btn btn-primary mt-10" value="Submit">
+                </div>
+                <div id="subscribeLoader"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="footer" class="container-fluid footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="mb-15">
+                    <a href="#"><i class="fa fa-fw fa-youtube-play fa-2x"> </i></a>
+                    <a href="#"><i class="fa fa-fw fa-twitter fa-2x"> </i></a>
+                    <a href="#"><i class="fa fa-instagram fa-2x"> </i></a>
+                    <a href="#"><i class="fa fa-facebook fa-2x ml-10"> </i></a>
+                </div>
+                <div class="mt-25">
+                    <strong>Terra Viva Home and Garden</strong><br />
+                196 Roydvale Avenue<br />
+                Burnside, Christchurch<br />
+                New Zealand
+                </div>
+                <br />
+                <div id="contact-info">
+                    <b>Phone</b>: +64 3 358 5565<br />
+                    <b>Email</b>: {{ render(controller('AppBundle:Default:hideEmail',{'email':'garden@terraviva.co.nz'})) }}
+                </div>
+                <br />
+            </div>
+            {{ render(controller('AppBundle:Shop:menus',{'mode':'footer'})) }}
+        </div>
+    </div>
+</section>
+
+<section id="footer-bottom" class="container-fluid footer-bottom">
+    &copy; Terra Viva {{ "now"|date('Y') }} | Site by <a href="http://spinifexnz.com" target="_blank">Spinifex</a>
+</section>
+
+<a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+
+{{ render(controller('AppBundle:Shop:menus',{'mode':'modal'})) }}
+{% include 'modal_login.html.twig' %}
+
+<div class="search-modal modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content slide">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="modal-body">
+            	<div class="row">
+            		<div class="col-md-1">
+            			<i class="fa fa-search"></i>
+            		</div>
+            		<div class="col-md-11">
+		                <input type="text" placeholder="Search Terra Viva Products" name="search" />
+		                <p>Have an empty space and need a plant for it? <a href="{{ path('plant_finder') }}">Try our Plant Finder Tool</a>.</p>
+            		</div>
+            	</div>
+            </div>
+        </div>
+    </div>
+</div>

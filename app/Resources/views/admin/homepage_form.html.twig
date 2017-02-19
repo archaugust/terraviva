@@ -1,0 +1,96 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+<div class="row">
+    {{ form_start(form, {'attr': {'enctype':'multipart/form-data'}}) }}
+    <div class="animated fadeInDown col-md-12">
+    	<h3 class="mt-0">Main Banner</h3>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_row(form.main_title) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.main_subtitle) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.main_url) }}
+            </div>
+            <div class="col-md-12">
+                {{ form_row(form.main_img) }}
+            </div>
+            <div class="col-md-12">
+            	<img src="{{ asset('images/home/'~ form.vars.value.mainImg) }}" class="img-responsive">
+            </div>
+        </div>
+        <div class="row">
+        	<div class="col-md-4">
+            	<h3>Thumbnail Banner 1</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_1_title) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_1_subtitle) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_1_url) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_1_img) }}
+                    </div>
+                    <div class="col-md-12">
+                    	<img src="{{ asset('images/home/'~ form.vars.value.thumb1Img) }}" class="img-responsive">
+                    </div>
+                </div>
+        	</div>
+        	<div class="col-md-4">
+            	<h3>Thumbnail Banner 2</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_2_title) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_2_subtitle) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_2_url) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_2_img) }}
+                    </div>
+                    <div class="col-md-12">
+                    	<img src="{{ asset('images/home/'~ form.vars.value.thumb2Img) }}" class="img-responsive">
+                    </div>
+                </div>
+        	</div>
+        	<div class="col-md-4">
+            	<h3>Thumbnail Banner 3</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_3_title) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_3_subtitle) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_3_url) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.thumb_3_img) }}
+                    </div>
+                    <div class="col-md-12">
+                    	<img src="{{ asset('images/home/'~ form.vars.value.thumb3Img) }}" class="img-responsive">
+                    </div>
+                </div>
+        	</div>
+    	</div>
+    	<h3>{{ form_label(form.content) }}</h3>
+    	{{ form_errors(form.content) }}
+    	{{ form_widget(form.content) }}
+    	<br />
+    	{{ form_row(form.save) }}
+    </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}

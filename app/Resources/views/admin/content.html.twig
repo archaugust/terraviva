@@ -1,0 +1,48 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <form method="post" name="delete">
+    <div><a href="{{ path('admin_content_add', {'cat_id':cat_id}) }}" class="btn btn-primary">Add New</a> <input type="submit" name="submit" class="btn btn-primary" value="Delete"></div>
+    <br />
+    <div class="clear-fix"></div>
+        <table class="table table-bordered table-hover table-responsive mt-10">
+            <thead>
+            <tr>
+                <th width="30"><input type="checkbox" id="checkAll"></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'title' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Title</a></th>
+                {% if (cat_id == '') %}
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'cat_id' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Category</a></th>
+                <th>Link</th>
+                {% endif %}
+                
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'hits' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Hits</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'date_added' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Date Added</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'date_modified' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Date Modified</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for content in contents %}
+                <tr>
+                    <td><input type="checkbox" name="delete[{{ content.id }}]" value="{{ content.id }}"></td>
+                    <td><a href="{{ path('admin_content_edit', {'id':content.id}) }}">{{ content.title }}</a></td>
+                    {% if (cat_id == '') %}
+                    <td>{% if content.catId is null %}Uncategorised{% else %}{{ content.category.title }}{% endif %}</td>
+                    <td><input type="text" class="form-control" onfocus="this.select()" value="{% if content.catId != 1 %}{{ path('_custom_route', {'alias':content.alias}) }}{% else %}{{ path('garden_info',{'alias':content.alias}) }}{% endif %}"></td>
+                    {% endif %}
+                    <td>{{ content.hits }}</td>
+                    <td>{{ content.dateAdded|date("j F Y H:i:s")  }}</td>
+                    <td>{{ content.dateModified|date("j F Y H:i:s")  }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+{% endblock %}
+

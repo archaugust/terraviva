@@ -1,0 +1,17 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+elfinder:
+     resource: "@FMElfinderBundle/Resources/config/routing.yml"
+
+cms:
+    resource: "@CmsBundle/Controller/"
+    type:     annotation
+
+router:
+    resource: "@RouterBundle/Controller/"
+    type:     annotation

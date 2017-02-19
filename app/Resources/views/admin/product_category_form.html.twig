@@ -1,0 +1,222 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <a href="{{ path('admin_product_category', {'id': parent}) }}" class="btn btn-primary mb-15">View All</a>
+    <br />
+    {{ form_start(form, { attr: {'id':'form'} }) }}
+    {{ form_errors(form) }}
+<div class="animated fadeInDown">
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.title) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.parent) }}
+            <fieldset class="form-group">
+                {% set ordering = form.vars.value.ordering %}
+                <input type="hidden" id="ordering" value="{{ ordering }}">
+                {{ form_label(form.ordering) }}
+                <div id="orderingDiv">
+                    {{ form_widget(form.ordering, {'attr': {'class': 'form-control'}}) }}
+                    <input type="text" readonly placeholder="Save Category First" class="form-control" />
+                </div>
+                {{ form_errors(form.ordering) }}
+            </fieldset>
+            {{ form_row(form.category_info.content) }}
+            {{ form_widget(form.save, {'attr':{'class':'btn btn-primary'}}) }}
+            {{ form_widget(form.saveAndAdd, {'attr':{'class':'btn btn-primary'}}) }}
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            	<div class="col-md-6">
+                <fieldset class="form-group">
+                    {{ form_label(form.image) }}
+                    {% if form.vars.value.image is not empty %}
+                        <div class="small mt-10 mb-5">
+                            <img src="{{ asset('images/categories/thumb/'~ form.vars.value.image) }}" class="img-responsive" />
+                            <br />Current Image, upload another to replace
+                        </div>
+                    {% endif %}
+                    {{ form_widget(form.image) }}
+                    {{ form_errors(form.image) }}
+                </fieldset>
+                <fieldset class="mt-20 form-group">
+                    <b>Optional Category Tags</b>
+                    <ul class="filters mt-15 list-unstyled" data-prototype="{{ form_widget(form.filters.vars.prototype)|e('html_attr') }}">
+                        {% for filter in form.filters %}
+                            <li class="tag-group">
+                                {{ form_row(filter.title) }}
+                                {{ form_row(filter.tags) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </fieldset>
+            	</div>
+                <div class="col-md-6 hidden" id="plant-finder">
+                    <div id="plantFinderDiv"></div>
+                    <h3 class="mt-0">Plant Finder Tags</h3>
+                    <div class="tag-group">
+                        {{ form_row(form.plant_finder.soil_moisture) }}
+                    </div>
+                    <div class="tag-group">
+                        {{ form_row(form.plant_finder.soil_type) }}
+                    </div>
+                    <div class="tag-group">
+                        {{ form_row(form.plant_finder.light) }}
+                    </div>
+                    <div class="tag-group">
+                        {{ form_row(form.plant_finder.wind_exposure) }}
+                    </div>
+                    <div class="tag-group">
+                        {{ form_row(form.plant_finder.plant_height) }}
+                    </div>
+                    <div class="hidden" id="custom-height">
+                    	{{ form_row(form.plant_finder.custom_height) }}
+                    </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/tags.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/tags.js') }}"></script>
+    <script>
+        const loader = '<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>';
+        $('#product_category_parent').change(function(event) {
+            var id = $('#product_category_parent').val();
+            var selected = $('#ordering').val();
+            $('#orderingDiv').html(loader);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{{ path('ajax_category_ordering') }}",
+                data: 'id='+id+'&selected='+selected,
+                success: function (data) {
+                    $('#orderingDiv').html(data);
+                }
+            })
+        });
+
+        $('.tags').tagsInput( {
+            'defaultText':'Add a tag',
+            'width':'100%',
+            'height':'44px'
+        });
+        
+        var $collectionHolder;
+
+        var $addFilterLink = $('<div class="small mb-15">Use commas (,) to separate Tags.</div><a href="#" class="add_filter_link btn btn-default">Add Tag Group</a>');
+        var $newLinkLi = $('<li></li>').append($addFilterLink);
+
+        jQuery(document).ready(function() {
+            $collectionHolder = $('ul.filters');
+
+            // add a delete link to all of the existing tag form li elements
+            $collectionHolder.find('li').each(function() {
+                addFilterFormDeleteLink($(this));
+            });
+
+            $collectionHolder.append($newLinkLi);
+
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addFilterLink.on('click', function(e) {
+                e.preventDefault();
+
+                addTagForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addTagForm($collectionHolder, $newLinkLi) {
+            var prototype = $collectionHolder.data('prototype');
+
+            var index = $collectionHolder.data('index');
+
+            var newForm = prototype.replace(/__name__/g, index);
+
+            $collectionHolder.data('index', index + 1);
+
+            var $newFormLi = $('<li class="tag-group"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFilterFormDeleteLink($newFormLi);
+
+            $('.tags').tagsInput( {
+                'defaultText':'Add a tag',
+                'width':'100%',
+                'height':'44px'
+            }
+            );
+        }
+
+        function addFilterFormDeleteLink($filterFormLi) {
+            var $removeFormA = $('<a href="#" class="btn btn-default btn-sm">Delete this Tag Group</a>');
+            $filterFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag form
+                $filterFormLi.remove();
+            });
+        }
+
+        $('#product_category_parent').change(function(event) {
+            var cat_id = $('#product_category_parent').val();
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{{ path('ajax_plant_finder') }}",
+                data: 'cat_id='+cat_id,
+                success: function (data) {
+                    $('#plantFinderDiv').html(data);
+                }
+            });
+        });
+
+        $('#product_category_plant_finder_plant_height_3').change(function(event) {
+            if (this.checked) 
+                $('#custom-height').removeClass('hidden');
+            else
+                $('#custom-height').addClass('hidden');
+        });
+
+        function unrequire($group) {
+            $group.prop('required', false);
+        }
+
+        function noPlantFinder() {
+            unrequire($("input:radio[id^='product_category_plant_finder_soil_moisture']"));
+            unrequire($("input:radio[id^='product_category_plant_finder_soil_type']"));
+            unrequire($("input:radio[id^='product_category_plant_finder_light']"));
+            unrequire($("input:checkbox[id^='product_category_plant_finder_wind_exposure']"));
+            unrequire($("input:checkbox[id^='product_category_plant_finder_plant_height']"));
+        }
+
+        
+        noPlantFinder();
+
+        $(function (){
+   			$('#product_category_parent').val({{ parent }}).trigger('change');
+
+   			{% if parent != 4 %}
+   				$('#product_category_category_info_content').parent().hide();
+   			{% else %}
+   				$('#product_category_parent').parent().hide();
+   			{% endif %}
+        })
+    </script>
+{% endblock %}
+
+

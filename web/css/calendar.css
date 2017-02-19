@@ -1,0 +1,77 @@
+.panel-calendar {
+    border: none;
+    background: #E1E1E1;
+    border-bottom: 1px solid #BBBBBB;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-top: 50px;
+}
+.panel-calendar h2 {
+	font-size: 29.17px;
+	text-transform: none;
+}
+.panel-calendar .panel-subheading {
+    border: none;
+    background: #3f7506;
+    border-radius: 0;
+    color: #FFF;
+    padding: 15px 0 30px;
+}
+.panel-calendar .panel-subheading i {
+    opacity: 0.7;
+}
+.panel-calendar .panel-subheading a {
+    color: #FFF;
+}
+.panel-calendar .panel-subheading a:hover {
+    color: #EEE;
+}
+.panel-calendar h3 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    text-transform: none;
+    font-size: 29.17px; 
+}
+.panel-calendar li {
+    background: #E1E1E1;
+}
+.panel-calendar .list-group-item {
+	padding:0;
+}
+.panel-calendar .list-group-item:after {
+    border-top: 1px solid #BBBBBB;
+	content: '';
+	display: block;
+	margin-left: 25%;
+	width: 50%;
+}
+.panel-calendar .list-group-item a h3 {
+    padding: 15px 0 30px;
+    color: #444;
+}
+.panel-calendar .image {
+    overflow: hidden;
+    min-width: 100%;
+    display: block;
+    position: relative;
+    height: 545px;
+}
+.panel-calendar img {
+    height: inherit;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+.panel-calendar .panel-month-info {
+    background: #FFF;
+    padding: 20px -20px;
+}
+.list-group-item {
+	border: none;
+}
+
+@media (max-width: 767px) {
+	.panel-calendar {
+		margin-top: 10px;
+	}
+}

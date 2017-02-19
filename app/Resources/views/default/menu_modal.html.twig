@@ -1,0 +1,58 @@
+<section id="menuModals">
+<div class="menu-modal modal fade" id="menuGarden" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content slide">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="modal-body">
+                <div class="row" id="modal-menu">
+                    <div class="col-md-1 col-sm-12"></div>
+                    {% for menu in menu_garden %}
+                        <div class="col-md-2 col-sm-4">
+                            <h4>{{ menu.title }}</h4>
+                            <hr />
+                            <ul class="list-unstyled">
+                            {% for submenu in menu.items %}
+                                <li><a href="{% if submenu.alias is empty %}{{ path(submenu.route) }}{% else %}{{ path(submenu.route, {'alias':submenu.alias}) }}{% endif %}">{{ submenu.title }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                    <div class="col-md-1 col-sm-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="menu-modal modal fade" id="menuHomeGift" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content slide">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="modal-body">
+                <div class="row menu_home_gift" id="modal-menu">
+                    {% for menu in menu_home_gift %}
+                        <div class="col-md-2 col-sm-4">
+                            <h4>{{ menu.title }}</h4>
+                            <hr />
+                            <ul class="list-unstyled">
+                            {% for submenu in menu.items %}
+                                <li><a href="{% if submenu.alias is empty %}{{ path(submenu.route) }}{% else %}{{ path(submenu.route, {'alias':submenu.alias}) }}{% endif %}">{{ submenu.title }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

@@ -1,0 +1,11 @@
+{% if filters|length > 0 %}
+    {% for filter in filters %}
+        <label class="control-label">{{ filter.title }}</label>
+        {% set tags = filter.tags|split(',') %}
+        {% for tag in tags %}
+            <div class="checkbox"><label><input type="checkbox" name="product_item[filters][]" value="{{ tag }}" {% if tag in item_filters %}checked{% endif %} /> {{ tag }}</label></div>
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    No tags available for this category.
+{% endif %}

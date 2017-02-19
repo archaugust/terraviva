@@ -1,0 +1,39 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <form method="post" name="delete">
+    <div><a href="{{ path('admin_properties_category_add') }}" class="btn btn-primary">Add New Category</a> <input type="submit" name="submit" class="btn btn-primary" value="Delete"></div>
+    <br />
+    <div class="clear-fix"></div>
+        <table class="table table-bordered table-hover table-responsive mt-10">
+            <thead>
+            <tr>
+                <th width="30"><input type="checkbox" id="checkAll"></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'title' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Title</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'hits' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Hits</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'date_added' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Date Added</a></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'date_modified' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Date Modified</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for content in contents %}
+                <tr>
+                    <td><input type="checkbox" name="delete[{{ content.id }}]" value="{{ content.id }}"></td>
+                    <td><a href="/admin/listings/category/edit/{{ content.id }}">{{ content.title }}</a></td>
+                    <td>{{ content.hits }}</td>
+                    <td>{{ content.dateAdded|date("m.d.Y H:i:s")  }}</td>
+                    <td>{{ content.dateModified|date("m.d.Y H:i:s")  }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+{% endblock %}
+

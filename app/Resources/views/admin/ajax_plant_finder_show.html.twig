@@ -1,0 +1,22 @@
+<script>
+    $('#plant-finder').fadeIn(300).removeClass('hidden');
+
+    function checkBoxes($cbx_group) {
+        $cbx_group.prop('required', true);
+        if($cbx_group.is(":checked")){
+            $cbx_group.prop('required', false);
+        }
+    }
+    
+    $('button[type="submit"]').on('click', function() {
+        checkBoxes($("input:radio[id^='product_category_plant_soil_moisture']"));
+        checkBoxes($("input:radio[id^='product_category_plant_soil_type']"));
+        checkBoxes($("input:checkbox[id^='product_category_plant_finder_light']"));
+        checkBoxes($("input:checkbox[id^='product_category_plant_finder_wind_exposure']"));
+        checkBoxes($("input:checkbox[id^='product_category_plant_finder_plant_height']"));
+    });
+
+    if ($('#product_category_plant_finder_plant_height_3').prop('checked'))
+    	$('#product_category_plant_finder_plant_height_3').trigger('change');
+
+</script>

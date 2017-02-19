@@ -1,0 +1,33 @@
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="loginModalLabel">Login to Start Ordering</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('fos_user_security_check') }}" method="post">
+                    <input type="hidden" name="_target_path" value="member">
+                    <div class="form-group">
+                        <label class="sr-only" for="username">Username</label>
+                        <input type="text" required class="form-control" placeholder="Username or Email" name="_username" id="username">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" required class="form-control" placeholder="Password" name="_password" id="password">
+                    </div>
+                    <div class="checkbox">
+                        <label for="remember_me">
+                            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                            Remember Me
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Login</button>
+                    <a href="/resetting/request" class="btn btn-default">Forgot your password?</a>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                </form>
+                <div class="mt-15"><a href="/register">No account yet? Sign up here.</a></div>
+            </div>
+        </div>
+    </div>
+</div>

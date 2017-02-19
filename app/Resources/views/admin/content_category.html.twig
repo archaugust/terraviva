@@ -1,0 +1,33 @@
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+    <form method="post" name="delete">
+        <div><a href="{{ path('admin_content_category_add') }}" class="btn btn-primary">Add New</a> <input type="submit" name="submit" class="btn btn-primary" value="Delete"></div>
+        <br />
+        <div class="clear-fix"></div>
+        <table class="table table-bordered table-hover table-responsive mt-10">
+            <thead>
+            <tr>
+                <th width="30"><input type="checkbox" id="checkAll"></th>
+                <th><a href="?sort=title{% if app.request.query.get('sort') == 'title' %}&order={% if app.request.query.get('order') == 'desc' %}asc{% else %}desc{% endif %}{% endif %}">Title</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for content in contents %}
+                <tr>
+                    <td><input type="checkbox" name="delete[{{ content.id }}]" value="{{ content.id }}"></td>
+                    <td><a href="{{ path('admin_content_category_edit', {'id':content.id}) }}">{{ content.title }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+{% endblock %}
+

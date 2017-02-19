@@ -1,0 +1,24 @@
+            <div class="col-md-2">
+                <h4 class="mt-0">The Garden</h4>
+                <div class="clearfix"><hr class="red"></div>
+                <ul class="list-unstyled">
+                    {% for menu in menu_garden %}
+                    <li><a href="{{ path(menu.route, {'alias':menu.alias}) }}">{{ menu.title }}</a> </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <h4 class="mt-0">Home & Gift</h4>
+                <div class="clearfix"><hr class="red"></div>
+                <ul class="list-unstyled">
+                    {% for menu in menu_home_gift %}
+                    <li><a href="{{ path(menu.route, {'alias':menu.alias}) }}">{{ menu.title }}</a> </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <a href="/design"><h4 class="mt-0 mb-5 normal">Design</h4></a>
+                <a href="{{ path('contact') }}"><h4 class="mt-25 mb-5 normal">Contact</h4></a>
+                <a href="/gift-vouchers"><h4 class="mt-25 normal">Gift Vouchers</h4></a>
+                <img src="{{ asset('images/go-gardening.png') }}" alt="Go Gardening" />
+            </div>

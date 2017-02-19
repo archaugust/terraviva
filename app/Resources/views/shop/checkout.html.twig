@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Checkout Complete{% endblock %}
+{% block header %}Your Order has been Placed{% endblock %}
+{% block breadcrumbs %}
+    <a href="/products">Products</a> <i class="fa fa-angle-right fa-fw"> </i>
+    <a href="/cart">Shopping Cart</a> <i class="fa fa-angle-right fa-fw"> </i>
+    <a href="/cart">Confirm Order</a> <i class="fa fa-angle-right fa-fw"> </i>
+{% endblock %}
+
+{% block body %}
+    <div class="animated fadeInUp">
+        <p>We will process your order and email you the invoice within 24 hours. <br />Thank you for your business.</p>
+        <br />
+        <a href="products" class="btn btn-primary">Continue Browsing</a>
+    </div>
+{% endblock %}

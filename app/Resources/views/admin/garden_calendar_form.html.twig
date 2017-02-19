@@ -1,0 +1,133 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'admin_base.html.twig' %}
+{% block body %}
+{{ form_start(form, { attr: {'id':'form'} }) }}
+{{ form_errors(form) }}
+<div class="animated fadeInUp row">
+    <div class="col-md-6">
+    {{ form_row(form.description) }}
+        {{ form_widget(form.save, {'attr':{'class':'btn btn-primary'}}) }}
+    </div>
+    <div class="col-md-6">
+        <label>Calendars</label>
+    <fieldset class="form-group">
+        <ul class="calendars list-unstyled" data-prototype="{{ form_widget(form.items.vars.prototype)|e('html_attr') }}">
+            {% for item in form.items %}
+                <li id="item">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a role="button" class="pull-right" data-toggle="collapse" href="#collapse_{{ item.vars.value.id }}" aria-expanded="true">
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                {{ item.vars.value.title }}</h4>
+                        </div>
+                        <div id="collapse_{{ item.vars.value.id }}" class="panel-body panel-collapse collapse in" role="tablist">
+                            {{ form_row(item.title) }}
+                            {{ form_row(item.bg_color) }}
+                            {{ form_row(item.filename) }}
+                            <img src="{{ asset('images/calendars/'~ item.vars.value.filename) }}" class="img-responsive mb-5" />
+                            <div class="small mb-15">Upload another image to replace</div>
+                            <input type="hidden" name="image[]" value="{{ item.vars.value.id }}" />
+                            {{ form_row(item.january) }}
+                            {{ form_row(item.february) }}
+                            {{ form_row(item.march) }}
+                            {{ form_row(item.april) }}
+                            {{ form_row(item.may) }}
+                            {{ form_row(item.june) }}
+                            {{ form_row(item.july) }}
+                            {{ form_row(item.august) }}
+                            {{ form_row(item.september) }}
+                            {{ form_row(item.october) }}
+                            {{ form_row(item.november) }}
+                            {{ form_row(item.december) }}
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </fieldset>
+    </div>
+</div>
+{{ form_end(form) }}
+
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link href="{{ asset('css/spectrum.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/spectrum.js') }}"></script>
+    <script>
+        $('#item .collapse').collapse();
+
+        const loader = '<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>';
+
+        var $collectionHolder;
+
+        var $addCalendarLink = $('<a href="#" class="add_calendar_link btn btn-default">Add Calendar</a>');
+        var $newLinkLi = $('<li></li>').append($addCalendarLink);
+
+        jQuery(document).ready(function() {
+            $collectionHolder = $('ul.calendars');
+
+            $collectionHolder.find('li').each(function() {
+                addCalendarFormDeleteLink($(this));
+            });
+
+            $collectionHolder.append($newLinkLi);
+
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addCalendarLink.on('click', function(e) {
+                e.preventDefault();
+
+                addCalendarForm($collectionHolder, $newLinkLi);
+            });
+
+            $('.colorpicker').spectrum({
+                showInput: true
+            });
+        });
+
+        function addCalendarForm($collectionHolder, $newLinkLi) {
+            var prototype = $collectionHolder.data('prototype');
+
+            var index = $collectionHolder.data('index');
+
+            var newForm = prototype.replace(/__name__/g, index);
+
+            $collectionHolder.data('index', index + 1);
+
+            var $newFormLi = $('<li class="tag-group"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addCalendarFormDeleteLink($newFormLi);
+
+            $('.colorpicker').spectrum({
+                showInput: true
+            });
+        }
+
+        function addCalendarFormDeleteLink($filterFormLi) {
+            var $removeFormA = $('<a href="#" class="btn btn-default btn-sm">Delete this Calendar</a><hr />');
+            $filterFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag form
+                $filterFormLi.remove();
+            });
+        }
+
+        $('form').submit(function (event){
+            $('form').find('.colorpicker').each(function () {
+                $(this).val($(this).spectrum('get').toHex());
+            })
+        });
+    </script>
+{% endblock %}

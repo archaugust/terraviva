@@ -1,0 +1,109 @@
+{% extends 'base_cart.html.twig' %}
+{% block title %}Shopping Cart{% endblock %}
+{% block description %}Items on your cart.{% endblock %}
+{% block header %}{% if confirm %}Confirm Your Order{% else %}Shopping Cart{% endif %}{% endblock %}
+{% block breadcrumbs %}
+    <i class="fa fa-angle-left fa-fw"></i> <a href="{{ path('cart') }}">Shopping Cart</a> {% if confirm %} <i class="fa fa-angle-left fa-fw"></i> Checkout{% endif %}
+{% endblock %}
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% set logged = 1 %}
+{% else %}
+    {% set logged = 0 %}
+{% endif %}
+
+{% block body %}
+    <div class="animated fadeInUp">
+    {% if confirm %}<p>Please review and confirm your order.</p>{% endif %}
+    </div>
+    <div class="animated fadeInUp">
+    {% if cart_items|length > 0 %}
+        <form action="{{ path('cart') }}" id="cart" method="post">
+            <input type="hidden" name="update" id="update" value="0" />
+            <input type="hidden" name="id" id="id" value="" />
+            {% for cart_item in cart_items %}
+                <div class="row cart_item">
+                    <div class="col-md-2">
+                        <figure><img src="{{ asset('images/listings/s/'~ cart_item.image) }}" alt="{{ cart_item.item.title }}" class="img-responsive" /></figure>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-xs-12"><h3 class="mt-5"><a href="{{ path('shop_item', {'alias':cart_item.item.alias}) }}" target="_blank">{{ cart_item.item.title }}</a></h3></div>
+                            <div class="col-md-4 mt-5">
+                                <span class="small">Price<br /></span>{{ cart_item.price_sale|number_format(2, '.', ',') }}
+                            </div>
+                            <div class="col-md-4 mt-5">
+                                <span class="small">Quantity<br /></span>
+                                {% if confirm %}
+                                    {{ cart_item.qty }}
+                                {% else %}
+                                    <input type="number" class="form-control" name="item_{{ cart_item.index }}" value="{{ cart_item.qty }}" onchange="javascript:cart_update()" />
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mt-5">
+                                <div class="text-right"><span>Sub Total<br /></span><h4 class="mt-0">{{ (cart_item.price_sale * cart_item.qty)|number_format(2, '.', ',') }}</h4></div>
+                            </div>
+                            {% if not confirm %}
+                            <div class="col-xs-12 mt-5">
+                                <a href="javascript:cart_remove({{ cart_item.index + 1 }})" class="btn btn-primary btn-sm"><i class="fa fa-cart-arrow-down fa-fw"></i> Remove</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <hr class="clearfix" />
+            <div class="row">
+                <div class="col-md-7">
+                    {% if app.session.get('continue') %}<a href="{{ path('shop_category', {'alias':app.session.get('continue')}) }}" class="btn btn-primary btn-lg"><i class="fa fa-cart-plus fa-fw"></i> Continue Shopping</a>{% endif %}
+                    {% if logged %}
+                        {% if confirm %}
+                            <a href="{{ path('cart_checkout') }}" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o fa-fw"></i> Confirm Order</a>
+                            <a href="{{ path('cart') }}" class="btn btn-primary btn-lg"><i class="fa fa-cart-plus fa-fw"></i> Edit Cart</a>
+                        {% else %}
+                            <a href="{{ path('cart') }}?confirm=1" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o fa-fw"></i> Proceed to Checkout</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    {% if confirm %}
+                        <div class="text-right">
+                            Order Subtotal
+                            <h3 class="mt-5">$ {{ price_total|number_format(2,'.',',') }}</h3>
+                        </div>
+                        <div class="text-right">
+                            GST
+                            <h3 class="mt-5">$ {{ (price_total * 0.15)|number_format(2,'.',',') }}</h3>
+                        </div>
+                        <div class="text-right">
+                            Total*
+                            <h1 class="mt-5">$ {{ (price_total * 1.15)|number_format(2,'.',',') }}</h1>
+                        </div>
+
+                    {% else %}
+                        <div class="text-right">Order Subtotal <h2 class="mt-5">$ {{ price_total|number_format(2,'.',',') }}</h2></div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <p><a href="{{ path('shop_category', {'alias':'plants'}) }}">There are no items in your cart. Get some now!</a></p>
+    {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function cart_update()
+        {
+            $("#update").val(1);
+            $("#cart").trigger('submit');
+        }
+        function cart_remove(ad_id)
+        {
+            $("#ad_id").val(ad_id);
+            cart_update();
+        }
+    </script>
+{% endblock %}
