@@ -9,7 +9,8 @@
             <ul class="list-inline hidden-xs">
                 <li class="first light">CALL US: 03 358 5565 (EXT 2)</li>
                 <li class="normal">Open 7am - 5pm 7 Days</li>
-                <li class="dark"><a href="/cart" data-toggle="tooltip" data-placement="bottom" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="badge">{{ app.session.get('cart')|length }}</span></a></li>
+                <li><a href="{{ path('cart') }}" data-toggle="tooltip" data-placement="bottom" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="badge">{{ app.session.get('cart')|length }}</span></a></li>
+                <li><a href="{{ path('wishlist') }}" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i class="fa fa-star"></i></a></li>
                 {% if logged %}
                     <li><a href="/member" data-toggle="tooltip" data-placement="bottom" title="Member Account"><i class="fa fa-user"></i></a></li>
                     <li><a href="/logout" data-toggle="tooltip" data-placement="bottom" title="Logout" class="last"><i class="fa fa-power-off"></i></a></li>

@@ -1,0 +1,61 @@
+{% extends 'base_cart.html.twig' %}
+{% block title %}Wishlist{% endblock %}
+{% block description %}Items on your wishlist.{% endblock %}
+{% block header %}Wishlist{% endblock %}
+{% block breadcrumbs %}
+    <i class="fa fa-angle-left fa-fw"></i> <a href="{{ path('wishlist') }}">Wishlist</a>
+{% endblock %}
+
+{% block body %}
+    <div class="animated fadeInUp">
+    {% if wishlist_items|length > 0 %}
+        <form action="{{ path('wishlist') }}" id="wishlist" method="post">
+            <input type="hidden" name="update" id="update" value="0" />
+            <input type="hidden" name="id" id="id" value="" />
+            {% for wishlist_item in wishlist_items %}
+                <div class="row cart_item">
+                    <div class="col-md-2">
+                        <figure><img src="{{ asset('images/listings/s/'~ wishlist_item.image) }}" alt="{{ wishlist_item.item.title }}" class="img-responsive" /></figure>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-xs-12"><h3 class="mt-5"><a href="{{ path('shop_item', {'alias':wishlist_item.item.alias}) }}" target="_blank">{{ wishlist_item.item.title }}</a></h3></div>
+                            <div class="col-xs-12 mt-5">
+                                <span class="small">Price<br /></span>{{ wishlist_item.price_sale|number_format(2, '.', ',') }}
+                            </div>
+                            <div class="col-xs-12 mt-5">
+                                <a href="javascript:wishlist_remove({{ wishlist_item.index + 1 }})" class="btn btn-primary btn-sm"><i class="fa fa-cart-arrow-down fa-fw"></i> Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <hr class="clearfix" />
+            <div class="row">
+                <div class="col-md-7">
+                    {% if app.session.get('continue') %}<a href="{{ path('shop_category', {'alias':app.session.get('continue')}) }}" class="btn btn-primary btn-lg"><i class="fa fa-cart-plus fa-fw"></i> Continue Shopping</a>{% endif %}
+                    <a href="{{ path('wishlist_convert') }}" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o fa-fw"></i> Move to Shopping Cart</a>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <p><a href="{{ path('shop_category', {'alias':'plants'}) }}">There are no items in your wishlist. Get some now!</a></p>
+    {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function wishlist_update()
+        {
+            $("#update").val(1);
+            $("#wishlist").trigger('submit');
+        }
+        function wishlist_remove(id)
+        {
+            $("#id").val(id);
+            wishlist_update();
+        }
+    </script>
+{% endblock %}

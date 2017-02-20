@@ -14,8 +14,9 @@ use AppBundle\Entity\Subscriber;
 class ShopController extends Controller
 {
 	public function menusAction($mode) {
-		
-		//if (empty($menus))
+		$menus = $this->get('session')->get('menus');
+
+		if (empty($menus))
 		{
 			$repository = $this->getDoctrine()->getRepository('AppBundle:ProductCategory');
 	
@@ -65,7 +66,7 @@ class ShopController extends Controller
 			}
 			 
 			$menus = array($menu_garden, $menu_home_gift);
-			$this->get('session')->set('menus', array($menus));
+			$this->get('session')->set('menus', $menus);
 		}
 		 
 		return $this->render('default/menu_'. $mode .'.html.twig', array(
@@ -459,11 +460,12 @@ class ShopController extends Controller
      */
     public function cart(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $session = $this->get('session');
         $input = $request->request->all();
         $confirm = $request->query->get('confirm');
 
         empty($input['update']) ? $update = 0 : $update = 1;
-        $cart = $this->get('session')->get('cart');
+        $cart = $session->get('cart');
 
         if ($update == 1)
         {
@@ -488,23 +490,23 @@ class ShopController extends Controller
                         $cart[$index]['qty'] = $in_stock;
                     else
                     */
-                        $cart[$index]['qty'] = $qty;
+                    $cart[$index]['qty'] = $qty;
                 }
                 else
                     unset($cart[$index]);
 
             }
 
-            // remove item
+            // remove item, +1'd id at form since 0 is considered empty
             empty($input['id']) ? $id = '' : $id = $input['id'];
             if ($id != '')
-                unset($cart[($id-1)]);
+                unset($cart[$id - 1]);
 
-            $this->get('session')->set('cart', $cart);
+            $session->set('cart', $cart);
         }
 
         // render cart
-        $cart = $this->getCartItems();
+        $cart = $this->getSessionItems('cart');
         $cart_items = $cart['cart_items'];
 
         if (is_null($this->getUser()) && count($cart_items))
@@ -524,11 +526,11 @@ class ShopController extends Controller
      * @Route("cart/add", name="cart_add")
      */
     public function cartAdd(Request $request) {
+    	$session = $this->get('session');
         $data = $request->request->all();
         empty($data['qty']) ? $qty = 1 : $qty = $data['qty'];
+        $item = $request->get('item');
         
-        empty($request->query->get('item')) ? $item = $data['item'] : $item = $request->query->get('item'); 
-
         $item = $this->getDoctrine()->getRepository('AppBundle:ProductItem')->findOneBy(array('alias' => $item));
 
         if (is_null($item)) {
@@ -540,12 +542,10 @@ class ShopController extends Controller
             return $this->redirectToRoute('shop_category', array('alias'=>'plants'));
         }
 
-        $msg = $item->getTitle() .' added to cart.';
-
         $category = $item->getCategory();
 
         // save link for 'Continue Shopping' button
-        $this->get('session')->set('continue', $category->getAlias());
+        $session->set('continue', $category->getAlias());
 
         // check if sold out
         /*
@@ -571,13 +571,14 @@ class ShopController extends Controller
         // add to cart
         $id = $item->getId();
 
-        $cart = $this->get('session')->get('cart');
+        $cart = $session->get('cart');
         if (is_null($cart)) {
-            $this->get('session')->set('cart',array());
-            $cart = $this->get('session')->get('cart');
+            $session->set('cart',array());
+            $cart = $session->get('cart');
         }
 
-        if ($this->checkCart($cart, 'id', $id) == true)
+        // check if item is already in cart, if so +1
+        if ($this->checkItem($cart, 'id', $id) == true)
         {
             foreach($cart as $index => $data)
             {
@@ -592,7 +593,7 @@ class ShopController extends Controller
         else
             $cart[] = array('id' => $id, 'qty' => $qty);
 
-        $this->get('session')->set('cart', $cart);
+        $session->set('cart', $cart);
 
         return $this->redirectToRoute('cart');
     }
@@ -601,14 +602,17 @@ class ShopController extends Controller
      * @Route("cart/checkout", name="cart_checkout")
      */
     public function cartCheckout() {
+    	$session = $this->get('session');
         $em = $this->getDoctrine()->getManager();
-        $cart = $this->get('session')->get('cart');
+        $cart = $session->get('cart');
         $user = $this->getUser();
 
-        if (is_null($user)) {
+//      if (is_null($user)) 
+		{
             $this->addFlash(
                 'danger',
-                'Please login to be able to place orders.'
+//                'Please login to be able to place orders.'
+				'Under construction.'
             );
 
             return $this->redirectToRoute('homepage');
@@ -616,47 +620,29 @@ class ShopController extends Controller
 
         if (count($cart)>0)
         {
-            $merchant = $em->getRepository('AppBundle:DealMerchant')->findOneBy(array('user_id' => $user->getId()));
-
-            if (is_null($merchant)) {
-                $this->addFlash(
-                    'danger',
-                    'Please apply to become a customer to be able to place orders.'
-                );
-
-                return $this->redirectToRoute('homepage');
-            };
-
             $price_total = 0;
             $order_items = array();
             foreach ($cart as $index => $data)
             {
-                $ad = $em->getRepository('AppBundle:DealAd')->find($data['ad_id']);
+                $item = $em->getRepository('AppBundle:ProductItem')->find($data['id']);
 
                 // check if ad.in_stock changed
-                if ($ad->getInStock() < $data['qty']) {
+/*                if ($item->getInStock() < $data['qty']) {
                     $this->addFlash(
                         'danger',
                         "A product's available inventory has just been depleted. Please review your cart's new quantity values."
                     );
-
                     return $this->redirectToRoute('cart');
                 }
+*/
 
-                if ($ad->getPriceClearance() > 0 && $ad->getClearance() != 0)
-                    $price_sale = $ad->getPriceClearance();
-                else
-                    if ($data['qty'] >= $ad->getPriceDiscountQty() && $ad->getPriceDiscount() != 0)
-                        $price_sale = $ad->getPriceDiscount();
-                    else
-                        $price_sale = $ad->getPriceSale();
+                $price_sale = $ad->getPriceSale();
 
                 $price_total += ($price_sale * $data['qty']);
 
                 // order_items
                 $order_item = array(
-                    'ad_id' => $data['ad_id'],
-                    'type_id' => $data['type_id'],
+                    'id' => $data['id'],
                     'price' => $price_sale,
                     'qty' => $data['qty'],
                 );
@@ -666,7 +652,7 @@ class ShopController extends Controller
 
             // insert order record
             $now = time();
-            $order = new DealOrder();
+            $order = new ProductOrder();
             $order
                 ->setMerchant($merchant)
                 ->setDateAdded($now)
@@ -704,12 +690,12 @@ class ShopController extends Controller
 
             $cart = $this->getCartItems();
 
-            $this->get('session')->set('cart', array());
+            $session->set('cart', array());
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('An order has been placed')
-                ->setFrom(array('info@kingswaydist.co.nz' => 'Kingsway Distributor'))
-                ->setTo('info@kingswaydist.co.nz')
+                ->setFrom(array('info@terraviva.nz' => 'Terra Viva Home & Garden'))
+                ->setTo('info@terraviva.nz')
                 ->setBody(
                     $this->renderView('email/order.html.twig', array(
                         'merchant' => $merchant,
@@ -728,53 +714,194 @@ class ShopController extends Controller
                 'Your cart is empty.'
             );
 
-            return $this->redirectToRoute('products');
+            return $this->redirectToRoute('shop_category', array('alias' => 'plants'));
         }
 
-        return $this->render('directory/checkout.html.twig');
+        return $this->render('shop/checkout.html.twig');
     }
 
-    public function checkCart($array, $key, $val) {
+    public function checkItem($array, $key, $val) {
         foreach ($array as $item)
             if (isset($item[$key]) && $item[$key] == $val)
                 return true;
         return false;
     }
 
-    public function getCartItems() {
-        $cart = $this->get('session')->get('cart');
-        $price_total = 0;
-        $cart_items = array();
+    public function getSessionItems($mode) {
+        $session = $this->get('session')->get($mode);
+        $session_items = array();
         $repository = $this->getDoctrine()->getRepository('AppBundle:ProductItem');
-
-        if (count($cart) > 0) {
-	        foreach ($cart as $index => $data) {
+        if ($mode == 'cart')
+        	$price_total = 0;
+        
+        if (count($session) > 0) {
+	        foreach ($session as $index => $data) {
 	            $item = $repository->find($data['id']);
 	            $image = $item->getImages();
 	            (count($image) == 0) ? $image = 'no-image.jpg' : $image = $image[0]->getFilename();
 	
 	            $price_sale = $item->getPriceSale();
-	            $price_total += ($price_sale * $data['qty']);
-	
-	            $cart_item = array(
-	                'item' => $item,
-	                'image' => $image,
-	                'price_sale' => $price_sale,
-	                'index' => $index,
-	                'qty' => $data['qty'],
-	            );
-	
-	            $cart_items[] = $cart_item;
-	        }
-	        $cart = array(
-	            'cart_items' => $cart_items,
-	            'price_total' => $price_total
-	        );
-        }
 
-        return $cart;
+	            if ($mode == 'cart') {
+		            $price_total += ($price_sale * $data['qty']);
+
+		            $session_item = array(
+		            		'item' => $item,
+		            		'image' => $image,
+		            		'price_sale' => $price_sale,
+		            		'index' => $index,
+		            		'qty' => $data['qty'],
+		            );
+		        }
+		        else {
+		        	$session_item = array(
+		        			'item' => $item,
+		        			'image' => $image,
+		        			'price_sale' => $price_sale,
+		        			'index' => $index,
+		        	);
+		        }
+	
+	            $session_items[] = $session_item;
+	        }
+        }
+        
+        if ($mode == 'cart') {
+        	$session = array(
+        			'cart_items' => $session_items,
+        			'price_total' => $price_total
+        	);
+        }
+        else 
+        	$session = $session_items;
+
+        return $session;
     }
 
+    /**
+     * @Route("wishlist", name="wishlist")
+     */
+    public function wishlist(Request $request) {
+    	$session = $this->get('session');
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	$input = $request->request->all();
+    
+    	empty($input['update']) ? $update = 0 : $update = 1;
+    	$wishlist = $session->get('wishlist');
+    
+    	if ($update == 1)
+    	{
+    		// update cart
+    		foreach ($wishlist as $index => $data)
+    		{
+    			empty($input['item_'. $index]) ? $qty = 1 : $qty = $input['item_'. $index];
+    
+    			if ($qty > 0)
+    			{
+    				$item = $em->getRepository('AppBundle:ProductItem')->find($wishlist[$index]['id']);
+    
+			 		$wishlist[$index]['qty'] = $qty;
+    			}
+    			else
+    				unset($wishlist[$index]);
+    
+    		}
+    
+    		// remove item, +1'd id at form since 0 is considered empty
+    		empty($input['id']) ? $id = '' : $id = $input['id'];
+    		if ($id != '')
+    			unset($wishlist[$id - 1]);
+    
+    			$session->set('wishlist', $wishlist);
+    	}
+    
+    	// render wishlist
+    	$wishlist_items = $this->getSessionItems('wishlist');
+    
+   		return $this->render('shop/wishlist.html.twig', array(
+   				'wishlist_items' => $wishlist_items,
+   		));
+    }
+    
+    /**
+     * @Route("wishlist/add", name="wishlist_add")
+     */
+    public function wishlistAdd(Request $request) {
+    	$session = $this->get('session');
+    	$data = $request->request->all();
+    	empty($data['qty']) ? $qty = 1 : $qty = $data['qty'];
+    	$item = $request->get('item');
+    
+    	$item = $this->getDoctrine()->getRepository('AppBundle:ProductItem')->findOneBy(array('alias' => $item));
+    
+    	if (is_null($item)) {
+    		$this->addFlash(
+    				'danger',
+    				'Invalid item.'
+    		);
+    
+    		return $this->redirectToRoute('shop_category', array('alias'=>'plants'));
+    	}
+    
+    	$category = $item->getCategory();
+    
+    	// save link for 'Continue Shopping' button
+    	$session->set('continue', $category->getAlias());
+    
+    
+    	// add to wishlist
+    	$id = $item->getId();
+    
+    	$wishlist = $this->get('session')->get('wishlist');
+    	if (is_null($wishlist)) {
+    		$session->set('wishlist', array());
+    		$wishlist = $session->get('wishlist');
+    	}
+    
+    	// check if item is already in cart, if so ignore
+    	if ($this->checkItem($wishlist, 'id', $id) == false)
+    		$wishlist[] = array('id' => $id);
+    
+    		$session->set('wishlist', $wishlist);
+    
+   		return $this->redirectToRoute('wishlist');
+    }
+    
+    /**
+     * @Route("wishlist-convert", name="wishlist_convert")
+     */
+    public function wishlistConvert() {
+    	$repository = $this->getDoctrine()->getRepository('AppBundle:ProductItem');
+    	$session = $this->get('session');
+    	$wishlist = $session->get('wishlist');
+    	$cart = $session->get('cart');
+    	if (is_null($cart)) {
+    		$session->set('cart',array());
+    		$cart = $session->get('cart');
+    	}
+    	 
+    	foreach ($wishlist as $item) {
+    		$id = $item['id'];
+    		// check if item is already in cart, if so ignore
+    		if ($this->checkItem($cart, 'id', $id) == false) {
+    			// check if item has stock
+    			$product = $repository->find($id);
+    			if ($product->getInStock() > 0)
+    				$cart[] = array('id' => $id, 'qty' => 1);
+    			else
+    				$this->addFlash('warning', $product->getTitle() .' is out of stock.');
+    		}
+    	}
+    	
+   		$session->set('cart', $cart);
+   		
+   		$this->addFlash('notice', 'Items in your Wishlist have been added to your Cart.');
+   		$session->remove('wishlist');
+    	
+   		return $this->redirectToRoute('cart');
+    }
+    
     /**
      * @Route("garden-info/{alias}", name="garden_info")
      */

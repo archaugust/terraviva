@@ -179,7 +179,7 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             {% if item.inStock > 0 %}<li><a href="{{ path('cart_add') }}?item={{ item.alias }}">Shopping Cart</a></li>{% endif %}
-                                            <li><a href="#">Wishlist</a></li>
+                                            <li><a href="{{ path('wishlist_add') }}?item={{ item.alias }}">Wishlist</a></li>
                                         </ul>
                                     </div>
                                 </div>
