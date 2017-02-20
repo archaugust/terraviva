@@ -76,49 +76,47 @@ class DefaultController extends Controller
     
     	$form->handleRequest($request);
     	if ($form->isValid()):
-    	$data = $request->request->all();
+	    	$data = $request->request->all();
     	if(isset($data['g-recaptcha-response']) && !empty($data['g-recaptcha-response'])):
-    	//your site secret key
-    	$secret = '6LcrFQ0UAAAAAPL3VHWomOKF-BcTB1cd-NrYlVGj';
-    	//get verify response data
-    	$response = json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response=".$data['g-recaptcha-response']."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
-    	 
-    	// if the captcha is cleared with google, send the mail and echo ok.
-    	if ($response['success'] != false) :
-    	$contact
-    	->setDateSubmitted(time())
-    	;
-    	$em->persist($contact);
-    	$em->flush();
-    
-    	$content = 'Thank you. Your message has been sent.';
-    
-    	$message = \Swift_Message::newInstance()
-    	->setSubject('Contact')
-    	->setFrom(array('noreply@brightsmiles.nz' => 'Bright Smiles Dental Care'))
-    	//					->setTo('info@brightsmiles.nz')
-    	->setTo('archaugust@yahoo.com')
-    	->setBody(
-    			$this->renderView('email/contact.html.twig', array(
-    					'data' => $contact
-    			)),
-    			'text/html'
-    			);
-    
-    	$this->get('mailer')->send($message);
-    	else:
-    	$content = 'Robot verification failed, please try again.';
-    	endif;
-    	else:
-    	$content = 'Please click on the reCAPTCHA box.';
+	    	//your site secret key
+	    	$secret = '6LcrFQ0UAAAAAPL3VHWomOKF-BcTB1cd-NrYlVGj';
+	    	//get verify response data
+	    	$response = json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response=".$data['g-recaptcha-response']."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
+	    	 
+	    	// if the captcha is cleared with google, send the mail and echo ok.
+	    	if ($response['success'] != false) :
+		    	$contact->setDateSubmitted(time());
+		    	$em->persist($contact);
+		    	$em->flush();
+		    
+		    	$content = 'Thank you. Your message has been sent.';
+		    
+		    	$message = \Swift_Message::newInstance()
+			    	->setSubject('Contact')
+			    	->setFrom(array('noreply@terraviva.nz' => 'Terra Viva'))
+		//    		->setTo('info@terraviva.nz')
+			    	->setTo('archaugust@yahoo.com')
+			    	->setBody(
+		    			$this->renderView('email/contact.html.twig', array(
+		    					'data' => $contact
+		    			)),
+		    			'text/html'
+		    			);
+		    
+		    	$this->get('mailer')->send($message);
+		    	else:
+			    	$content = 'Robot verification failed, please try again.';
+		    	endif;
+	    	else:
+		    	$content = 'Please click on the reCAPTCHA box.';
     	endif;
     	return $this->render('default/contact-send.html.twig', array(
     			'content' => $content,
     			'form' => $form->createView()
     	));
     	else :
-    	$content->setHits($content->getHits() + 1);
-    	$em->flush();
+	    	$content->setHits($content->getHits() + 1);
+	    	$em->flush();
     	endif;
     
     	return $this->render('default/contact.html.twig', array(
@@ -127,61 +125,6 @@ class DefaultController extends Controller
     	));
     }
     
-    /**
-     * @Route("/contact-send")
-     */
-    public function mailAction(Request $request)
-    {
-        $data = $request->request->all();
-
-        if ($data['name'] && $data['email']):
-            if(isset($data['g-recaptcha-response']) && !empty($data['g-recaptcha-response'])):
-                //your site secret key
-                $secret = '6LcrFQ0UAAAAAPL3VHWomOKF-BcTB1cd-NrYlVGj';
-                //get verify response data
-                $response = json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response=".$data['g-recaptcha-response']."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
-
-                // if the captcha is cleared with google, send the mail and echo ok.
-                if ($response['success'] != false) :
-                    //contact form submission code
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject('Contact')
-                        ->setFrom(array('info@kingswaydist.co.nz' => 'Kingsway Distributor'))
-                        ->setTo('info@kingswaydist.co.nz')
-                        ->setBody(
-                            $this->renderView(
-                                'email/contact.html.twig',
-                                $data
-                            ),
-                            'text/html'
-                        )
-                    ;
-                    $this->get('mailer')->send($message);
-
-                    $content = 'Thank you. Your message has been magically sent.';
-                else:
-                    $content = 'Robot verification failed, please try again.';
-                endif;
-            else:
-                $content = 'Please click on the reCAPTCHA box.';
-            endif;
-        else :
-            $content = 'Please enter all required info.';
-        endif;
-
-        return $this->render('/default/contact-send.html.twig', array(
-                'title' => 'Contact',
-                'content' => $content,
-                'contact' => array('name' => $data['name'],
-                    'email' => $data['email'],
-                    'message' => $data['message'],
-                    'subject' => $data['subject'],
-                )
-            )
-        );
-    }
-
     public function hideEmailAction($email)
     {
         $character_set = '+-.0123456789@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
